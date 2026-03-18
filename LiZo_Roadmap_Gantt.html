@@ -57,6 +57,57 @@
         .btn-secondary { background: #5b3fb0; color: white; }
         .btn-secondary:hover { background: #7c5fd6; }
 
+        /* Views Dropdown */
+        .views-dropdown-wrapper { margin-bottom: 16px; position: relative; }
+        .views-dropdown-trigger {
+            width: 100%; padding: 8px 12px; background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 6px; cursor: pointer; font-size: 12px; color: #1e293b;
+            display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
+        }
+        .views-dropdown-trigger:hover { border-color: #cbd5e1; }
+        .views-dropdown-trigger .vd-label { color: #64748b; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .views-dropdown-trigger .vd-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .views-dropdown-trigger .vd-arrow { font-size: 10px; color: #94a3b8; transition: transform 0.2s; }
+        .views-dropdown-trigger.open .vd-arrow { transform: rotate(180deg); }
+        .views-dropdown-menu {
+            display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 50; max-height: 200px; overflow-y: auto;
+        }
+        .views-dropdown-menu.open { display: block; }
+        .views-dropdown-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 12px; cursor: pointer; font-size: 12px; transition: all 0.15s; border-bottom: 1px solid #f1f5f9;
+        }
+        .views-dropdown-item:last-child { border-bottom: none; }
+        .views-dropdown-item:hover { background: #f8fafc; }
+        .views-dropdown-item.active { background: #ede9fe; color: #6d28d9; font-weight: 500; }
+        .views-dropdown-item .vdi-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .views-dropdown-item .vdi-delete {
+            width: 18px; height: 18px; border: none; background: transparent;
+            color: #94a3b8; cursor: pointer; font-size: 12px; padding: 0;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .views-dropdown-item .vdi-delete:hover { color: #dc2626; }
+
+        /* Search */
+        .search-wrapper { position: relative; margin-bottom: 12px; display: flex; align-items: center; }
+        .search-bar {
+            width: 100%; padding: 8px 28px 8px 30px; background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 6px; font-size: 12px; color: #1e293b; transition: all 0.2s;
+        }
+        .search-bar:focus { outline: none; border-color: #a78bfa; box-shadow: 0 0 0 3px rgba(167,139,250,0.15); }
+        .search-bar::placeholder { color: #94a3b8; }
+        .search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 12px; pointer-events: none; line-height: 1; }
+        .search-clear {
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            width: 18px; height: 18px; border: none; background: #e2e8f0; color: #64748b;
+            border-radius: 50%; cursor: pointer; font-size: 11px; line-height: 1;
+            display: none; align-items: center; justify-content: center; padding: 0;
+        }
+        .search-clear:hover { background: #cbd5e1; color: #1e293b; }
+        .search-clear.visible { display: flex; }
+
         /* Duration Legend */
         .duration-legend { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
         .duration-legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; color: #64748b; }
@@ -68,9 +119,26 @@
         .header {
             background: #F1F5F9; border-bottom: 1px solid #e2e8f0;
             padding: 20px 24px; flex-shrink: 0; color: #1e293b;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .header h1 { font-size: 24px; margin-bottom: 4px; color: #1e293b; }
+        .header-left h1 { font-size: 24px; margin-bottom: 4px; color: #1e293b; }
         .header-subtitle { color: #64748b; font-size: 13px; }
+        .header-right { display: flex; gap: 12px; align-items: center; }
+        .header-btn {
+            padding: 8px 14px; border: 1px solid #e2e8f0; background: #ffffff;
+            border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;
+            color: #475569; transition: all 0.2s; white-space: nowrap;
+        }
+        .header-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .header-btn.primary { background: #7c3aed; color: white; border-color: #7c3aed; }
+        .header-btn.primary:hover { background: #6d28d9; }
+        .settings-btn {
+            width: 36px; height: 36px; border: 1px solid #e2e8f0;
+            background: #ffffff; border-radius: 6px; cursor: pointer;
+            font-size: 18px; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .settings-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
 
         /* Timeline */
         .timeline-container { flex: 1; display: flex; overflow: hidden; }
@@ -115,9 +183,7 @@
             border: 1px solid rgba(255,255,255,0.15);
             overflow: hidden;
         }
-        .feature.w4 { width: calc(33.33% - 4px); }
-        .feature.w8 { width: calc(66.66% - 4px); }
-        .feature.w12 { width: calc(100% - 4px); }
+        /* Width = max(4, duration) / 12 * 100%. Min visual size = 4 weeks */
 
         .feature:hover {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); transform: translateY(-1px);
@@ -174,15 +240,17 @@
             background: #2d1b69; border: 1px solid #5b3fb0; border-radius: 12px;
             padding: 28px; max-width: 500px; width: 90%;
             box-shadow: 0 20px 25px rgba(0, 0, 0, 0.5); color: #e2e8f0;
+            max-height: 85vh; overflow-y: auto;
         }
         .modal-content h2 { font-size: 18px; margin-bottom: 20px; }
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 4px; color: #c4b5fd; }
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 10px 12px; background: #1e1150; border: 1px solid #5b3fb0;
             border-radius: 6px; color: #e2e8f0; font-size: 13px;
         }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: #a78bfa; box-shadow: 0 0 0 3px rgba(167,139,250,0.2); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #a78bfa; box-shadow: 0 0 0 3px rgba(167,139,250,0.2); }
+        .form-group textarea { resize: vertical; min-height: 100px; }
 
         .duration-selector { display: flex; gap: 8px; }
         .duration-option {
@@ -201,6 +269,17 @@
         .btn-cancel:hover { background: #7c5fd6; }
         .btn-delete { background: #dc2626; color: white; }
         .btn-delete:hover { background: #b91c1c; }
+
+        .toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #059669; color: white; padding: 12px 20px;
+            border-radius: 6px; font-size: 13px; z-index: 2000;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
 
         /* Print */
         @media print {
@@ -222,6 +301,23 @@
 <body>
     <div class="container">
         <div class="sidebar">
+            <div class="views-dropdown-wrapper">
+                <div class="views-dropdown-trigger" id="viewsDropdownTrigger">
+                    <div>
+                        <div class="vd-label">Current View</div>
+                        <div class="vd-name" id="currentViewLabel">Default</div>
+                    </div>
+                    <span class="vd-arrow">▼</span>
+                </div>
+                <div class="views-dropdown-menu" id="viewsDropdownMenu"></div>
+            </div>
+
+            <div class="search-wrapper">
+                <span class="search-icon">⌕</span>
+                <input type="text" class="search-bar" id="searchBar" placeholder="Search features...">
+                <button class="search-clear" id="searchClear" type="button">✕</button>
+            </div>
+
             <h2>Categories</h2>
             <div class="category-filters" id="categoryFilters"></div>
 
@@ -241,15 +337,24 @@
             </div>
 
             <div class="button-group">
-                <button class="btn btn-primary" id="addFeatureBtn">+ Add Feature</button>
+                <button class="btn btn-secondary" id="syncJiraBtn">Sync from Jira</button>
+                <button class="btn btn-secondary" id="syncDocBtn">Sync from Doc</button>
+                <button class="btn btn-secondary" id="exportCsvBtn">Export to CSV</button>
                 <button class="btn btn-secondary" id="printBtn">Print / Export</button>
             </div>
         </div>
 
         <div class="main">
             <div class="header">
-                <h1>LiZo.ai Product Roadmap</h1>
-                <div class="header-subtitle">Interactive Gantt Chart · Q2 2026 – Q1 2027 · Drag to reposition · Click ✎ to edit</div>
+                <div class="header-left">
+                    <h1>LiZo.ai Product Roadmap</h1>
+                    <div class="header-subtitle">Interactive Gantt Chart · Q2 2026 – Q1 2027 · Drag to reposition · Click ✎ to edit</div>
+                </div>
+                <div class="header-right">
+                    <button class="header-btn primary" id="addFeatureBtn">+ Add Feature</button>
+                    <button class="header-btn" id="saveViewBtn">💾 Save View</button>
+                    <button class="settings-btn" id="settingsBtn" title="Settings">⚙</button>
+                </div>
             </div>
 
             <div class="timeline-container">
@@ -287,24 +392,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Duration</label>
-                    <div class="duration-selector" id="addDuration">
-                        <div class="duration-option" data-weeks="4">
-                            <div class="dur-weeks">4</div>
-                            <div class="dur-label">weeks</div>
-                            <div class="dur-bar" style="width:33%"></div>
-                        </div>
-                        <div class="duration-option selected" data-weeks="8">
-                            <div class="dur-weeks">8</div>
-                            <div class="dur-label">weeks</div>
-                            <div class="dur-bar" style="width:66%"></div>
-                        </div>
-                        <div class="duration-option" data-weeks="12">
-                            <div class="dur-weeks">12</div>
-                            <div class="dur-label">weeks</div>
-                            <div class="dur-bar" style="width:100%"></div>
-                        </div>
-                    </div>
+                    <label>Duration (1–12 weeks)</label>
+                    <input type="number" id="addDurationInput" min="1" max="12" value="4" required>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-cancel" id="cancelAddBtn">Cancel</button>
@@ -337,24 +426,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Duration</label>
-                    <div class="duration-selector" id="editDuration">
-                        <div class="duration-option" data-weeks="4">
-                            <div class="dur-weeks">4</div>
-                            <div class="dur-label">weeks</div>
-                            <div class="dur-bar" style="width:33%"></div>
-                        </div>
-                        <div class="duration-option" data-weeks="8">
-                            <div class="dur-weeks">8</div>
-                            <div class="dur-label">weeks</div>
-                            <div class="dur-bar" style="width:66%"></div>
-                        </div>
-                        <div class="duration-option" data-weeks="12">
-                            <div class="dur-weeks">12</div>
-                            <div class="dur-label">weeks</div>
-                            <div class="dur-bar" style="width:100%"></div>
-                        </div>
-                    </div>
+                    <label>Duration (1–12 weeks)</label>
+                    <input type="number" id="editDurationInput" min="1" max="12" value="4" required>
                 </div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-cancel" id="cancelEditBtn">Cancel</button>
@@ -362,6 +435,86 @@
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h2>Settings</h2>
+            <form id="settingsForm">
+                <div class="form-group">
+                    <label>Jira Site URL</label>
+                    <input type="text" id="jiraSiteUrl" placeholder="e.g., lizo.atlassian.net" value="lizo.atlassian.net">
+                </div>
+                <div class="form-group">
+                    <label>Jira API Email</label>
+                    <input type="email" id="jiraEmail" placeholder="your-email@example.com" value="omer@lizo.ai">
+                </div>
+                <div class="form-group">
+                    <label>Jira API Token</label>
+                    <input type="password" id="jiraToken" placeholder="Your Jira API token" value="add_in_settings">
+                </div>
+                <div class="form-group">
+                    <label>Jira Project Key</label>
+                    <input type="text" id="jiraProjectKey" placeholder="e.g., APP" value="APP">
+                </div>
+                <div class="form-group">
+                    <label>Google Doc ID</label>
+                    <input type="text" id="googleDocId" placeholder="Document ID from URL" value="1Zk-OE_OOqPl8r6_rtMmFn78-WeZMeadmOA7BVqSr6-E">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" id="cancelSettingsBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sync Google Doc Modal -->
+    <div class="modal" id="syncDocModal">
+        <div class="modal-content">
+            <h2>Sync from Google Doc</h2>
+            <p style="margin-bottom:16px; font-size:13px; color:#a78bfa;">Paste content from your Google Doc below. Features are parsed from bullet points.</p>
+            <form id="syncDocForm">
+                <div class="form-group">
+                    <label>Paste Doc Content (one feature per line)</label>
+                    <textarea id="docContent" placeholder="• Feature Name One&#10;• Feature Name Two&#10;• Feature Name Three" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Default Quarter</label>
+                    <select id="syncDocQuarter">
+                        <option value="Q2">Q2 2026</option>
+                        <option value="Q3">Q3 2026</option>
+                        <option value="Q4">Q4 2026</option>
+                        <option value="Q1">Q1 2027</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Default Category</label>
+                    <select id="syncDocCategory"></select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" id="cancelSyncDocBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Import Features</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Save View Modal -->
+    <div class="modal" id="saveViewModal">
+        <div class="modal-content">
+            <h2>Save View</h2>
+            <div class="form-group">
+                <label>View Name</label>
+                <input type="text" id="saveViewName" placeholder="e.g., Sprint 1 Plan" required>
+            </div>
+            <div id="recentViewsList" style="margin-bottom:16px;"></div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-cancel" id="cancelSaveViewBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmSaveViewBtn">Save</button>
+            </div>
         </div>
     </div>
 
@@ -470,17 +623,54 @@
             ]
         };
 
+        // Global state
         let features = [];
         let currentEditingFeature = null;
         let activeCategoryFilters = new Set(Object.keys(CATEGORIES));
-        let addDurationValue = 8;
-        let editDurationValue = 8;
+        // Duration now uses number inputs directly
         let draggedFeatureId = null;
         let tooltipEl = null;
         let tooltipTimeout = null;
 
+        // Saved views and sync config (in-memory only)
+        let savedViews = {};
+        let currentViewName = null;
+        let syncConfig = {
+            jiraSiteUrl: 'lizo.atlassian.net',
+            jiraEmail: 'omer@lizo.ai',
+            jiraToken: '-add here',
+            jiraProjectKey: 'APP',
+            googleDocId: '1Zk-OE_OOqPl8r6_rtMmFn78-WeZMeadmOA7BVqSr6-E'
+        };
+
+        // localStorage helpers
+        function persist() {
+            try {
+                localStorage.setItem('lizo-views', JSON.stringify(savedViews));
+                localStorage.setItem('lizo-current-view', currentViewName || '');
+                localStorage.setItem('lizo-features', JSON.stringify(features));
+                localStorage.setItem('lizo-filters', JSON.stringify([...activeCategoryFilters]));
+                localStorage.setItem('lizo-config', JSON.stringify(syncConfig));
+            } catch(e) { /* localStorage unavailable */ }
+        }
+
+        function loadPersisted() {
+            try {
+                const sv = localStorage.getItem('lizo-views');
+                if (sv) savedViews = JSON.parse(sv);
+                const cv = localStorage.getItem('lizo-current-view');
+                if (cv) currentViewName = cv || null;
+                const ft = localStorage.getItem('lizo-features');
+                if (ft) { features = JSON.parse(ft); return true; }
+                const fl = localStorage.getItem('lizo-filters');
+                if (fl) activeCategoryFilters = new Set(JSON.parse(fl));
+                const cfg = localStorage.getItem('lizo-config');
+                if (cfg) syncConfig = { ...syncConfig, ...JSON.parse(cfg) };
+            } catch(e) { /* localStorage unavailable */ }
+            return false;
+        }
+
         function init() {
-            // Create tooltip element
             tooltipEl = document.createElement('div');
             tooltipEl.className = 'feature-tooltip';
             document.body.appendChild(tooltipEl);
@@ -489,9 +679,21 @@
             buildQuarterBodies();
             populateCategoryFilters();
             populateCategorySelects();
-            loadFeatures();
+
+            // Try restoring from localStorage; fall back to defaults
+            const restored = loadPersisted();
+            if (!restored) loadFeatures();
+
+            // Restore filter checkboxes to match loaded state
+            document.querySelectorAll('.category-filter').forEach(label => {
+                const cat = label.querySelector('input').dataset.category;
+                label.querySelector('input').checked = activeCategoryFilters.has(cat);
+                label.classList.toggle('active', activeCategoryFilters.has(cat));
+            });
+
             setupEventListeners();
             setupDurationSelectors();
+            initSavedViews();
             renderFeatures();
             updateQuarterCounts();
         }
@@ -542,38 +744,27 @@
                 label.querySelector('input').addEventListener('change', (e) => {
                     if (e.target.checked) { activeCategoryFilters.add(category); label.classList.add('active'); }
                     else { activeCategoryFilters.delete(category); label.classList.remove('active'); }
-                    renderFeatures(); updateQuarterCounts();
+                    renderFeatures(); updateQuarterCounts(); autoSaveLastSession();
                 });
                 container.appendChild(label);
             });
         }
 
         function populateCategorySelects() {
-            ['featureCategory','editFeatureCategory'].forEach(id => {
+            ['featureCategory','editFeatureCategory','syncDocCategory'].forEach(id => {
                 const sel = document.getElementById(id);
-                Object.keys(CATEGORIES).forEach(cat => {
-                    const opt = document.createElement('option');
-                    opt.value = cat; opt.textContent = cat;
-                    sel.appendChild(opt);
-                });
+                if (sel) {
+                    Object.keys(CATEGORIES).forEach(cat => {
+                        const opt = document.createElement('option');
+                        opt.value = cat; opt.textContent = cat;
+                        sel.appendChild(opt);
+                    });
+                }
             });
         }
 
         function setupDurationSelectors() {
-            document.querySelectorAll('#addDuration .duration-option').forEach(opt => {
-                opt.addEventListener('click', () => {
-                    document.querySelectorAll('#addDuration .duration-option').forEach(o => o.classList.remove('selected'));
-                    opt.classList.add('selected');
-                    addDurationValue = parseInt(opt.dataset.weeks);
-                });
-            });
-            document.querySelectorAll('#editDuration .duration-option').forEach(opt => {
-                opt.addEventListener('click', () => {
-                    document.querySelectorAll('#editDuration .duration-option').forEach(o => o.classList.remove('selected'));
-                    opt.classList.add('selected');
-                    editDurationValue = parseInt(opt.dataset.weeks);
-                });
-            });
+            // Now using number inputs, no setup needed
         }
 
         function loadFeatures() {
@@ -586,10 +777,7 @@
 
         function setupEventListeners() {
             document.getElementById('addFeatureBtn').addEventListener('click', () => {
-                addDurationValue = 8;
-                document.querySelectorAll('#addDuration .duration-option').forEach(o => {
-                    o.classList.toggle('selected', parseInt(o.dataset.weeks) === 8);
-                });
+                document.getElementById('addDurationInput').value = 4;
                 document.getElementById('addModal').classList.add('active');
                 document.getElementById('featureName').focus();
             });
@@ -599,7 +787,27 @@
             document.getElementById('cancelEditBtn').addEventListener('click', closeModal);
             document.getElementById('deleteFeatureBtn').addEventListener('click', handleDeleteFeature);
             document.getElementById('printBtn').addEventListener('click', () => window.print());
-            ['addModal','editModal'].forEach(id => {
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                document.getElementById('jiraSiteUrl').value = syncConfig.jiraSiteUrl;
+                document.getElementById('jiraEmail').value = syncConfig.jiraEmail;
+                document.getElementById('jiraToken').value = syncConfig.jiraToken;
+                document.getElementById('jiraProjectKey').value = syncConfig.jiraProjectKey;
+                document.getElementById('googleDocId').value = syncConfig.googleDocId;
+                document.getElementById('settingsModal').classList.add('active');
+            });
+            document.getElementById('settingsForm').addEventListener('submit', handleSettingsSave);
+            document.getElementById('cancelSettingsBtn').addEventListener('click', closeModal);
+            document.getElementById('syncJiraBtn').addEventListener('click', handleSyncJira);
+            document.getElementById('syncDocBtn').addEventListener('click', () => {
+                document.getElementById('syncDocModal').classList.add('active');
+            });
+            document.getElementById('syncDocForm').addEventListener('submit', handleSyncDoc);
+            document.getElementById('cancelSyncDocBtn').addEventListener('click', closeModal);
+            document.getElementById('exportCsvBtn').addEventListener('click', handleExportCsv);
+            document.getElementById('saveViewBtn').addEventListener('click', showSaveViewModal);
+            document.getElementById('confirmSaveViewBtn').addEventListener('click', handleSaveView);
+            document.getElementById('cancelSaveViewBtn').addEventListener('click', closeModal);
+            ['addModal','editModal','settingsModal','syncDocModal','saveViewModal'].forEach(id => {
                 document.getElementById(id).addEventListener('click', (e) => { if (e.target.id === id) closeModal(); });
             });
         }
@@ -607,7 +815,11 @@
         function renderFeatures() {
             document.querySelectorAll('.features-container').forEach(c => c.innerHTML = '');
             const quarters = { Q1: [], Q2: [], Q3: [], Q4: [] };
-            features.forEach(f => { if (activeCategoryFilters.has(f.category)) quarters[f.quarter].push(f); });
+            features.forEach(f => {
+                if (!activeCategoryFilters.has(f.category)) return;
+                // search doesn't filter — highlighting is done in createFeatureElement
+                quarters[f.quarter].push(f);
+            });
 
             Object.entries(quarters).forEach(([quarter, qf]) => {
                 const container = document.querySelector(`.features-container[data-quarter="${quarter}"]`);
@@ -617,17 +829,26 @@
 
         function createFeatureElement(feature) {
             const div = document.createElement('div');
-            const widthClass = feature.duration <= 4 ? 'w4' : feature.duration <= 8 ? 'w8' : 'w12';
-            div.className = `feature ${widthClass}`;
+            div.className = 'feature';
+            const dur = feature.duration || 4;
+            const visualWeeks = Math.max(8, Math.min(12, dur));
+            div.style.width = `calc(${(visualWeeks / 12 * 100).toFixed(1)}% - 4px)`;
             div.draggable = true;
             div.dataset.featureId = feature.id;
             const color = CATEGORIES[feature.category];
+            const isMatch = !searchQuery || feature.name.toLowerCase().includes(searchQuery);
             div.style.background = color;
+            if (searchQuery && !isMatch) {
+                div.style.opacity = '0.2';
+                div.style.transform = 'scale(0.97)';
+            } else if (searchQuery && isMatch) {
+                div.style.boxShadow = '0 0 0 2px #fff, 0 0 12px rgba(124,58,237,0.6)';
+            }
 
             div.innerHTML = `
                 <div class="feature-inner">
                     <div class="feature-label">${feature.name}</div>
-                    <div class="feature-duration-badge">${feature.duration}w</div>
+                    <div class="feature-duration-badge">${dur}w</div>
                     <button class="feature-edit-btn" title="Edit">✎</button>
                 </div>
             `;
@@ -637,7 +858,7 @@
                 showEditModal(feature.id);
             });
 
-            // Tooltip on hover — only shows if text is actually truncated
+            // Tooltip on hover
             div.addEventListener('mouseenter', (e) => {
                 const label = div.querySelector('.feature-label');
                 if (label.scrollWidth > label.clientWidth) {
@@ -669,14 +890,12 @@
                 e.dataTransfer.effectAllowed = 'move';
                 e.dataTransfer.setData('text/plain', feature.id);
                 requestAnimationFrame(() => div.classList.add('dragging'));
-                // Hide tooltip during drag
                 clearTimeout(tooltipTimeout);
                 tooltipEl.classList.remove('visible');
             });
             div.addEventListener('dragend', () => {
                 div.classList.remove('dragging');
                 draggedFeatureId = null;
-                // Clean up all indicators
                 document.querySelectorAll('.drop-indicator').forEach(el => el.remove());
                 document.querySelectorAll('.features-area').forEach(el => el.style.background = '');
             });
@@ -700,7 +919,6 @@
                     e.dataTransfer.dropEffect = 'move';
                     container.parentElement.style.background = 'rgba(124,58,237,0.12)';
 
-                    // Show insertion indicator
                     const existingIndicator = container.querySelector('.drop-indicator');
                     if (existingIndicator) existingIndicator.remove();
 
@@ -736,14 +954,12 @@
                     const targetQuarter = container.dataset.quarter;
                     const dropIdx = getDropIndex(container, e.clientY);
 
-                    // Remove from current position in features array
                     const featureObj = features.find(f => f.id === fid);
                     if (!featureObj) return;
 
                     features = features.filter(f => f.id !== fid);
                     featureObj.quarter = targetQuarter;
 
-                    // Find where to insert: get the visible features in this quarter, find the insert position
                     const quarterFeatures = features.filter(f => f.quarter === targetQuarter && activeCategoryFilters.has(f.category));
                     let insertAfterIdx = -1;
                     if (dropIdx > 0 && dropIdx <= quarterFeatures.length) {
@@ -751,13 +967,13 @@
                     } else if (dropIdx === 0 && quarterFeatures.length > 0) {
                         insertAfterIdx = features.indexOf(quarterFeatures[0]) - 1;
                     } else {
-                        // Empty quarter or drop at end — insert at end
                         insertAfterIdx = features.length - 1;
                     }
 
                     features.splice(insertAfterIdx + 1, 0, featureObj);
                     renderFeatures();
                     updateQuarterCounts();
+                    autoSaveLastSession();
                 });
             });
         }
@@ -768,16 +984,16 @@
             document.getElementById('editFeatureName').value = currentEditingFeature.name;
             document.getElementById('editFeatureCategory').value = currentEditingFeature.category;
             document.getElementById('editFeatureQuarter').value = currentEditingFeature.quarter;
-            editDurationValue = currentEditingFeature.duration;
-            document.querySelectorAll('#editDuration .duration-option').forEach(o => {
-                o.classList.toggle('selected', parseInt(o.dataset.weeks) === editDurationValue);
-            });
+            document.getElementById('editDurationInput').value = currentEditingFeature.duration || 4;
             document.getElementById('editModal').classList.add('active');
         }
 
         function closeModal() {
             document.getElementById('addModal').classList.remove('active');
             document.getElementById('editModal').classList.remove('active');
+            document.getElementById('settingsModal').classList.remove('active');
+            document.getElementById('syncDocModal').classList.remove('active');
+            document.getElementById('saveViewModal').classList.remove('active');
             document.getElementById('addForm').reset();
         }
 
@@ -787,8 +1003,9 @@
             const category = document.getElementById('featureCategory').value;
             const quarter = document.getElementById('featureQuarter').value;
             if (name) {
-                features.push({ id: Math.max(...features.map(f => f.id), -1) + 1, name, category, quarter, duration: addDurationValue });
-                renderFeatures(); updateQuarterCounts(); closeModal();
+                const dur = Math.max(1, Math.min(12, parseInt(document.getElementById('addDurationInput').value) || 4));
+                features.push({ id: Math.max(...features.map(f => f.id), -1) + 1, name, category, quarter, duration: dur });
+                renderFeatures(); updateQuarterCounts(); closeModal(); autoSaveLastSession();
             }
         }
 
@@ -798,15 +1015,15 @@
                 currentEditingFeature.name = document.getElementById('editFeatureName').value.trim();
                 currentEditingFeature.category = document.getElementById('editFeatureCategory').value;
                 currentEditingFeature.quarter = document.getElementById('editFeatureQuarter').value;
-                currentEditingFeature.duration = editDurationValue;
-                renderFeatures(); updateQuarterCounts(); closeModal();
+                currentEditingFeature.duration = Math.max(1, Math.min(12, parseInt(document.getElementById('editDurationInput').value) || 4));
+                renderFeatures(); updateQuarterCounts(); closeModal(); autoSaveLastSession();
             }
         }
 
         function handleDeleteFeature() {
             if (currentEditingFeature && confirm('Delete this feature?')) {
                 features = features.filter(f => f.id !== currentEditingFeature.id);
-                renderFeatures(); updateQuarterCounts(); closeModal();
+                renderFeatures(); updateQuarterCounts(); closeModal(); autoSaveLastSession();
             }
         }
 
@@ -817,6 +1034,315 @@
             document.getElementById('q3-count').textContent = q.Q3;
             document.getElementById('q4-count').textContent = q.Q4;
             document.getElementById('q1-count').textContent = q.Q1;
+        }
+
+        // SAVED VIEWS FEATURE
+        let searchQuery = '';
+
+        function initSavedViews() {
+            savedViews['Default'] = JSON.parse(JSON.stringify(FEATURES_DATA));
+            if (!savedViews['Last Session']) savedViews['Last Session'] = JSON.parse(JSON.stringify(FEATURES_DATA));
+            renderSavedViewsList();
+
+            // Views dropdown toggle
+            const trigger = document.getElementById('viewsDropdownTrigger');
+            const menu = document.getElementById('viewsDropdownMenu');
+            trigger.addEventListener('click', () => {
+                trigger.classList.toggle('open');
+                menu.classList.toggle('open');
+            });
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.views-dropdown-wrapper')) {
+                    trigger.classList.remove('open');
+                    menu.classList.remove('open');
+                }
+            });
+
+            // Search bar
+            const searchInput = document.getElementById('searchBar');
+            const searchClearBtn = document.getElementById('searchClear');
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim().toLowerCase();
+                searchClearBtn.classList.toggle('visible', searchQuery.length > 0);
+                renderFeatures();
+            });
+            searchClearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                searchQuery = '';
+                searchClearBtn.classList.remove('visible');
+                renderFeatures();
+            });
+        }
+
+        function renderSavedViewsList() {
+            // Update dropdown label
+            document.getElementById('currentViewLabel').textContent = currentViewName || 'Default';
+
+            const menu = document.getElementById('viewsDropdownMenu');
+            menu.innerHTML = '';
+            Object.keys(savedViews).forEach(viewName => {
+                const item = document.createElement('div');
+                item.className = 'views-dropdown-item' + (currentViewName === viewName ? ' active' : '');
+                item.innerHTML = `
+                    <span class="vdi-name">${viewName}</span>
+                    ${viewName !== 'Default' ? '<button class="vdi-delete" type="button" title="Delete">✕</button>' : ''}
+                `;
+                item.querySelector('.vdi-name').addEventListener('click', () => {
+                    loadView(viewName);
+                    document.getElementById('viewsDropdownTrigger').classList.remove('open');
+                    menu.classList.remove('open');
+                });
+                const delBtn = item.querySelector('.vdi-delete');
+                if (delBtn) {
+                    delBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (confirm(`Delete view "${viewName}"?`)) {
+                            delete savedViews[viewName];
+                            if (currentViewName === viewName) currentViewName = null;
+                            renderSavedViewsList();
+                            persist();
+                        }
+                    });
+                }
+                menu.appendChild(item);
+            });
+        }
+
+        function showSaveViewModal() {
+            document.getElementById('saveViewName').value = currentViewName && currentViewName !== 'Last Session' && currentViewName !== 'Default' ? currentViewName : '';
+            // Populate recent saves
+            const list = document.getElementById('recentViewsList');
+            const userViews = Object.keys(savedViews).filter(n => n !== 'Default' && n !== 'Last Session');
+            if (userViews.length > 0) {
+                list.innerHTML = '<label style="display:block;font-size:12px;color:#c4b5fd;margin-bottom:6px;">Overwrite existing:</label>' +
+                    userViews.map(n => `<div style="padding:6px 10px;background:#1e1150;border:1px solid #5b3fb0;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:12px;color:#e2e8f0;" class="recent-view-pick" data-name="${n}">${n}</div>`).join('');
+                list.querySelectorAll('.recent-view-pick').forEach(el => {
+                    el.addEventListener('click', () => {
+                        document.getElementById('saveViewName').value = el.dataset.name;
+                        list.querySelectorAll('.recent-view-pick').forEach(e => e.style.borderColor = '#5b3fb0');
+                        el.style.borderColor = '#a78bfa';
+                    });
+                });
+            } else {
+                list.innerHTML = '';
+            }
+            document.getElementById('saveViewModal').classList.add('active');
+            document.getElementById('saveViewName').focus();
+        }
+
+        function handleSaveView() {
+            const name = document.getElementById('saveViewName').value.trim();
+            if (!name) { showToast('Please enter a view name'); return; }
+            const isOverwrite = !!savedViews[name];
+            savedViews[name] = {
+                features: JSON.parse(JSON.stringify(features)),
+                filters: [...activeCategoryFilters]
+            };
+            currentViewName = name;
+            renderSavedViewsList();
+            persist();
+            closeModal();
+            showToast(isOverwrite ? `View "${name}" overwritten!` : `View "${name}" saved!`);
+        }
+
+        function loadView(viewName) {
+            if (!savedViews[viewName]) return;
+            const view = savedViews[viewName];
+
+            if (viewName === 'Default') {
+                loadFeatures();
+                activeCategoryFilters = new Set(Object.keys(CATEGORIES));
+            } else if (view.features) {
+                features = JSON.parse(JSON.stringify(view.features));
+                activeCategoryFilters = new Set(Array.isArray(view.filters) ? view.filters : Object.keys(CATEGORIES));
+            }
+
+            currentViewName = viewName;
+            document.querySelectorAll('.category-filter').forEach(label => {
+                const cat = label.querySelector('input').dataset.category;
+                if (activeCategoryFilters.has(cat)) {
+                    label.classList.add('active');
+                    label.querySelector('input').checked = true;
+                } else {
+                    label.classList.remove('active');
+                    label.querySelector('input').checked = false;
+                }
+            });
+            renderFeatures();
+            updateQuarterCounts();
+            renderSavedViewsList();
+            persist();
+            showToast(`Loaded view: "${viewName}"`);
+        }
+
+        function autoSaveLastSession() {
+            savedViews['Last Session'] = {
+                features: JSON.parse(JSON.stringify(features)),
+                filters: [...activeCategoryFilters]
+            };
+            persist();
+        }
+
+        // JIRA + GOOGLE DOC SYNC
+        function handleSettingsSave(e) {
+            e.preventDefault();
+            syncConfig.jiraSiteUrl = document.getElementById('jiraSiteUrl').value.trim();
+            syncConfig.jiraEmail = document.getElementById('jiraEmail').value.trim();
+            syncConfig.jiraToken = document.getElementById('jiraToken').value.trim();
+            syncConfig.jiraProjectKey = document.getElementById('jiraProjectKey').value.trim();
+            syncConfig.googleDocId = document.getElementById('googleDocId').value.trim();
+            closeModal();
+            persist();
+            showToast('Settings saved!');
+        }
+
+        function processJiraData(data) {
+            if (!data.issues || !data.issues.length) {
+                showToast('No issues found in Jira response.');
+                return;
+            }
+            let added = 0, existing = 0;
+            const categoryMap = { 'Bug': 'Bugs', 'Story': 'Research', 'Epic': 'Research', 'Task': 'Data', 'Sub-task': 'UI/UX' };
+            data.issues.forEach(issue => {
+                const issueName = issue.fields.summary;
+                const issueType = issue.fields.issuetype ? issue.fields.issuetype.name : 'Story';
+                const isDuplicate = features.some(f =>
+                    f.name.toLowerCase().trim() === issueName.toLowerCase().trim()
+                );
+                if (!isDuplicate) {
+                    features.push({
+                        id: Math.max(...features.map(f => f.id), -1) + 1,
+                        name: issueName,
+                        category: categoryMap[issueType] || 'Research',
+                        quarter: 'Q2',
+                        duration: 8,
+                        source: 'Jira'
+                    });
+                    added++;
+                } else {
+                    existing++;
+                }
+            });
+            renderFeatures();
+            updateQuarterCounts();
+            autoSaveLastSession();
+            showToast(`Jira sync: ${added} new added, ${existing} already existed`);
+        }
+
+        function handleSyncJira() {
+            if (!syncConfig.jiraEmail || !syncConfig.jiraToken) {
+                alert('Please configure Jira settings first (gear icon).');
+                return;
+            }
+
+            showToast('Syncing from Jira...');
+
+            const auth = btoa(syncConfig.jiraEmail + ':' + syncConfig.jiraToken);
+            const jql = `project=${syncConfig.jiraProjectKey} AND status!=Done`;
+            const directUrl = `https://${syncConfig.jiraSiteUrl}/rest/api/3/search?jql=${encodeURIComponent(jql)}&maxResults=100&fields=summary,issuetype,status,priority`;
+
+            // Try direct first
+            fetch(directUrl, {
+                headers: { 'Authorization': 'Basic ' + auth, 'Accept': 'application/json' }
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('Direct failed: ' + r.status);
+                return r.json();
+            })
+            .then(data => processJiraData(data))
+            .catch(directErr => {
+                // Direct failed (CORS) — try via corsproxy.io
+                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(directUrl)}`;
+                fetch(proxyUrl, {
+                    headers: { 'Authorization': 'Basic ' + auth, 'Accept': 'application/json' }
+                })
+                .then(r => {
+                    if (!r.ok) throw new Error('Proxy also failed: ' + r.status);
+                    return r.json();
+                })
+                .then(data => processJiraData(data))
+                .catch(proxyErr => {
+                    showToast('CORS blocked. Use "Sync Doc" to paste Jira data manually, or run from localhost.');
+                    console.error('Direct error:', directErr, 'Proxy error:', proxyErr);
+                });
+            });
+        }
+
+        function handleSyncDoc(e) {
+            e.preventDefault();
+            const content = document.getElementById('docContent').value.trim();
+            const quarter = document.getElementById('syncDocQuarter').value;
+            const category = document.getElementById('syncDocCategory').value;
+
+            if (!content) {
+                alert('Please paste content.');
+                return;
+            }
+
+            const lines = content.split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(l => l);
+            let added = 0, existing = 0;
+
+            lines.forEach(featureName => {
+                if (!featureName) return;
+                const isDuplicate = features.some(f =>
+                    f.name.toLowerCase().trim() === featureName.toLowerCase().trim()
+                );
+
+                if (!isDuplicate) {
+                    features.push({
+                        id: Math.max(...features.map(f => f.id), -1) + 1,
+                        name: featureName,
+                        category: category || 'Research',
+                        quarter: quarter,
+                        duration: 8
+                    });
+                    added++;
+                } else {
+                    existing++;
+                }
+            });
+
+            renderFeatures();
+            updateQuarterCounts();
+            autoSaveLastSession();
+            closeModal();
+            showToast(`Imported: ${added} new, ${existing} already existed`);
+        }
+
+        // CSV EXPORT
+        function handleExportCsv() {
+            const rows = [['Feature Name', 'Category', 'Quarter', 'Duration (weeks)', 'Source']];
+            features.forEach(f => {
+                rows.push([f.name, f.category, f.quarter, f.duration, 'Roadmap']);
+            });
+
+            const csv = rows.map(row => row.map(cell => `"${cell}"`).join('\t')).join('\n');
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(csv).then(() => {
+                showToast('Copied to clipboard! Open Google Sheets and paste (Ctrl+V)');
+            }).catch(() => {
+                // Fallback: download
+                const blob = new Blob([csv], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'lizo-roadmap.tsv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showToast('Downloaded as TSV file');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
         init();
