@@ -1,1351 +1,1016 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LiZo.ai Product Roadmap - Gantt Chart</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lizo.ai Product Roadmap</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f1f5f9;color:#1e293b;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.hdr{background:#fff;border-bottom:1px solid #e2e8f0;height:52px;display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;z-index:30;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.logo{font-size:17px;font-weight:700;color:#0f172a;letter-spacing:-.3px}.logo em{color:#7c3aed;font-style:normal}
+.tabs{display:flex;gap:3px}
+.tab-btn{padding:5px 15px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:500;background:transparent;color:#64748b;transition:all .15s}
+.tab-btn.active{background:#7c3aed;color:#fff}.tab-btn:hover:not(.active){background:#f1f5f9;color:#1e293b}
+.hdr-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.btn{padding:5px 13px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:500}
+.btn-primary{background:#7c3aed;color:#fff}.btn-secondary{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+.btn-secondary:hover{background:#e2e8f0}
+.nav-btn{width:28px;height:28px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;color:#64748b;cursor:pointer;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;padding:0}
+.nav-btn:hover:not(:disabled){background:#f1f5f9;color:#1e293b;border-color:#cbd5e1}.nav-btn:disabled{opacity:.35;cursor:default}
+.nav-range{font-size:12px;color:#475569;font-weight:500;min-width:128px;text-align:center;white-space:nowrap}
+.body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:188px;flex-shrink:0;background:#fff;border-right:1px solid #e2e8f0;overflow-y:auto;padding:14px 10px;font-size:12px}
+.sidebar::-webkit-scrollbar{width:4px}.sidebar::-webkit-scrollbar-thumb{background:#e2e8f0;border-radius:2px}
+.s-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:6px;margin-top:14px}
+.s-title:first-child{margin-top:0}
+.cat-row{display:flex;align-items:center;gap:6px;padding:3px 4px;border-radius:4px;cursor:pointer;color:#334155;user-select:none}
+.cat-row:hover{background:#f1f5f9}.cat-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}.cat-row.off{opacity:.35}
+.q-stat{display:flex;justify-content:space-between;align-items:center;padding:3px 4px;color:#475569}
+.q-count{background:#f1f5f9;border-radius:8px;padding:1px 7px;font-weight:600;color:#1e293b;font-size:11px;border:1px solid #e2e8f0}
+.leg-item{display:flex;align-items:center;gap:6px;padding:3px 4px;color:#475569}
+.leg-dot{width:9px;height:9px;border-radius:50%}
+.leg-dot.done{background:#22c55e}.leg-dot.partial{background:#f59e0b}.leg-dot.todo{background:#e2e8f0;border:1px solid #cbd5e1}
+.tab-content{display:none;flex:1;overflow:hidden;flex-direction:column}
+.tab-content.active{display:flex}
+:root{--mw:168px;--rh:34px;--nh:52px;--qh:26px}
+.gantt-wrap{flex:1;overflow:auto;position:relative}
+.gantt-wrap::-webkit-scrollbar{height:8px;width:8px}
+.gantt-wrap::-webkit-scrollbar-track{background:#f1f5f9}
+.gantt-wrap::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
+.gantt-inner{display:inline-block;min-width:calc(240px + 12 * var(--mw));vertical-align:top}
+.g-hdr-row{display:flex;position:sticky;top:0;z-index:20;height:var(--nh)}
+.g-corner{width:240px;flex-shrink:0;background:#fff;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;display:flex;align-items:flex-end;padding:0 10px 7px;font-size:11px;color:#64748b;position:sticky;left:0;z-index:25}
+.g-months{display:flex;background:#fff;border-bottom:1px solid #e2e8f0}
+.g-month{width:var(--mw);flex-shrink:0;display:flex;flex-direction:column;justify-content:flex-end;padding:0 10px 6px;border-right:1px solid #e8ecf0;position:relative}
+.g-month.qs{border-left:2px solid #e2e8f0}.g-month.today-month{background:rgba(124,58,237,.05)}
+.g-q-badge{position:absolute;top:6px;left:10px;font-size:9px;font-weight:700;color:#7c3aed;background:#ede9fe;padding:1px 5px;border-radius:3px}
+.g-month-name{font-size:12px;font-weight:600;color:#1e293b}.g-month-yr{font-size:9px;color:#64748b}
+.q-hdr-row{display:flex;height:var(--qh);background:#f8fafc;border-bottom:1px solid #e2e8f0;position:sticky;z-index:15;border-top:1px solid #e2e8f0}
+.q-hdr-name{width:240px;flex-shrink:0;display:flex;align-items:center;padding:0 10px;font-size:10px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.06em;background:#f8fafc;position:sticky;left:0;z-index:18}
+.q-hdr-bar{display:flex;flex:1}.q-hdr-cell{width:var(--mw);flex-shrink:0;border-right:1px solid #e8ecf0}
+.f-row{display:flex;height:var(--rh);border-bottom:1px solid rgba(0,0,0,.09);transition:background .1s}
+.f-row:hover{background:rgba(124,58,237,.06)}.f-row.hidden{display:none}
+.f-name{width:240px;flex-shrink:0;display:flex;align-items:center;padding:0 6px 0 10px;gap:6px;background:#fff;position:sticky;left:0;z-index:10;overflow:hidden;border-right:1px solid #d8dfe8}
+.f-row:hover .f-name{background:#f5f3ff}
+.status-btn{flex-shrink:0;width:16px;height:16px;border-radius:50%;border:none;cursor:pointer;transition:transform .15s;display:flex;align-items:center;justify-content:center;font-size:8px}
+.status-btn:hover{transform:scale(1.4)}
+.status-btn.todo{background:#e2e8f0;border:1.5px solid #cbd5e1;color:#94a3b8}.status-btn.partial{background:#f59e0b;color:#fff}.status-btn.done{background:#22c55e;color:#fff}
+.f-label{font-size:12px;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.f-bars{flex:1;position:relative;min-width:calc(12 * var(--mw));background-color:#f1f5f9;background-image:repeating-linear-gradient(to right,transparent 0,transparent calc(var(--mw) - 1px),#dde3ec calc(var(--mw) - 1px),#dde3ec var(--mw))}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #F1F5F9;
-            color: #1e293b;
-            line-height: 1.5;
-            overflow-x: hidden;
-        }
+/* ── Bar ── */
+.f-bar{position:absolute;top:4px;height:calc(var(--rh) - 8px);border-radius:5px;display:flex;align-items:center;padding:0 10px;font-size:10px;font-weight:500;color:rgba(255,255,255,.95);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:grab;user-select:none;transition:filter .15s,opacity .15s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.f-bar:hover{filter:brightness(1.1);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.f-bar.dragging{cursor:grabbing;opacity:.85;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.25);transition:none;transform:translateY(-1px)}
+.f-bar.status-done{opacity:.4;text-decoration:line-through}
+.f-bar.status-partial{box-shadow:0 0 0 2px #f59e0b,0 1px 3px rgba(0,0,0,.15)}
+.f-bar.status-partial.dragging{box-shadow:0 0 0 2px #f59e0b,0 6px 20px rgba(0,0,0,.25)}
 
-        .container { display: flex; height: 100vh; }
+/* ── Resize handles ── */
+.f-bar-lh,.f-bar-rh{position:absolute;top:0;bottom:0;width:8px;cursor:col-resize;z-index:4;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;background:rgba(255,255,255,.3)}
+.f-bar:hover .f-bar-lh,.f-bar:hover .f-bar-rh{opacity:1}
+.f-bar-lh{left:0;border-radius:5px 0 0 5px}
+.f-bar-rh{right:0;border-radius:0 5px 5px 0}
+.f-bar-lh::after,.f-bar-rh::after{content:'⋮';font-size:8px;color:rgba(255,255,255,.9);pointer-events:none}
 
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: #F1F5F9;
-            border-right: 1px solid #e2e8f0;
-            overflow-y: auto;
-            padding: 24px;
-            flex-shrink: 0;
-            color: #1e293b;
-        }
+/* ── Today / Tooltip ── */
+.today-line{position:absolute;top:0;bottom:0;width:2px;background:#7c3aed;z-index:8;pointer-events:none}
+.today-line::before{content:'today';position:absolute;top:2px;left:4px;background:#7c3aed;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;white-space:nowrap}
+.drag-tip{position:fixed;background:#1e293b;border:1px solid #7c3aed;color:#e2e8f0;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;pointer-events:none;z-index:9999;display:none;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 
-        .sidebar h2 {
-            font-size: 14px; font-weight: 600; margin-bottom: 12px;
-            text-transform: uppercase; letter-spacing: 0.5px; color: #64748b;
-        }
+/* ── Weekly ── */
+.weekly-wrap{flex:1;overflow-y:auto;padding:24px 28px;background:#f1f5f9}
+.weekly-wrap::-webkit-scrollbar{width:6px}.weekly-wrap::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+.w-head{margin-bottom:22px}.w-title{font-size:20px;font-weight:700;color:#0f172a}.w-sub{font-size:13px;color:#64748b;margin-top:3px}
+.w-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.w-col{background:#fff;border-radius:10px;padding:18px;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.w-col-full{background:#fff;border-radius:10px;padding:18px;border:1px solid #e2e8f0;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.w-col-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding-bottom:12px;border-bottom:1px solid #e2e8f0;margin-bottom:14px}
+.w-col-title.active{color:#7c3aed}.w-col-title.done-c{color:#16a34a}.w-col-title.next-c{color:#d97706}
+.w-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;background:#f8fafc;border:1px solid #e2e8f0;margin-bottom:8px;transition:border-color .15s}
+.w-item:last-child{margin-bottom:0}.w-item:hover{border-color:#7c3aed}
+.w-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.w-info{flex:1;min-width:0}
+.w-name{font-size:13px;color:#1e293b;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.w-meta{font-size:11px;color:#64748b;margin-top:2px}
+.w-st-btn{flex-shrink:0;border:none;background:transparent;cursor:pointer;font-size:15px;padding:2px 4px;border-radius:4px;line-height:1}
+.w-st-btn:hover{background:#f1f5f9}
+.empty-msg{text-align:center;padding:24px 0;color:#94a3b8;font-size:13px}
+.w-badge{display:inline-block;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:600;margin-left:6px;vertical-align:middle}
+.w-badge.b-done{background:#dcfce7;color:#16a34a}.w-badge.b-partial{background:#fef3c7;color:#b45309}.w-badge.b-todo{background:#f1f5f9;color:#94a3b8;border:1px solid #e2e8f0}
 
-        .category-filters { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+/* ── Modals ── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:5000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.mo-box{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;min-width:340px;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.mo-title{font-size:15px;font-weight:700;color:#0f172a;margin-bottom:16px}
+.mo-row{margin-bottom:12px}
+.mo-label{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.mo-input{width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:8px 10px;color:#1e293b;font-size:13px;outline:none}
+.mo-input:focus{border-color:#7c3aed;background:#fff}
+.mo-select{width:100%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:7px 10px;color:#1e293b;font-size:13px;outline:none;cursor:pointer}
+.mo-actions{display:flex;gap:8px;margin-top:18px;justify-content:flex-end}
+.views-list{max-height:240px;overflow-y:auto;margin-bottom:12px}
+.view-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:7px;background:#f8fafc;border:1px solid #e2e8f0;margin-bottom:6px;cursor:pointer;transition:border-color .15s}
+.view-item:hover{border-color:#7c3aed;background:#faf9ff}
+.view-item-name{font-size:13px;color:#1e293b;font-weight:500}
+.view-item-del{border:none;background:transparent;color:#cbd5e1;cursor:pointer;font-size:16px;padding:0 4px;line-height:1}
+.view-item-del:hover{color:#dc2626}
+.upload-drop{border:2px dashed #e2e8f0;border-radius:8px;padding:24px;text-align:center;color:#94a3b8;font-size:13px;cursor:pointer;transition:border-color .15s;margin-bottom:12px;background:#f8fafc}
+.upload-drop:hover{border-color:#7c3aed;color:#475569;background:#faf9ff}
+.upload-note{font-size:11px;color:#94a3b8;margin-top:6px}
 
-        .category-filter {
-            display: flex; align-items: center; gap: 8px; padding: 6px 10px;
-            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;
-            cursor: pointer; transition: all 0.2s; font-size: 12px; color: #475569;
-        }
-        .category-filter:hover { background: #f8fafc; border-color: #cbd5e1; }
-        .category-filter input[type="checkbox"] { cursor: pointer; width: 14px; height: 14px; }
-        .category-filter.active { background: #f8fafc; border-color: #94a3b8; color: #1e293b; }
-        .color-indicator { width: 10px; height: 10px; border-radius: 3px; }
+/* ── Zoom control ── */
+.zoom-ctrl{display:flex;align-items:center;gap:6px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:4px 10px}
+.zoom-ctrl label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94a3b8;white-space:nowrap}
+.zoom-ctrl input[type=range]{width:72px;accent-color:#7c3aed;cursor:pointer;height:3px}
+.zoom-val{font-size:11px;font-weight:600;color:#7c3aed;min-width:22px;text-align:right}
 
-        .quarter-stats { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
-        .quarter-stat { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 12px; }
-        .quarter-stat-label { color: #64748b; }
-        .quarter-stat-count { background: #7c3aed; color: white; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+/* ── Week marks in month header ── */
+.g-month{position:relative}
+.g-wmarks{position:absolute;bottom:0;left:0;right:0;display:flex;height:100%;pointer-events:none}
+.g-wmark{flex:1;border-left:1px solid rgba(0,0,0,.07)}
+.g-wmark:first-child{border-left:none}
+.g-wlabel{font-size:8px;color:#cbd5e1;position:absolute;bottom:4px;transform:translateX(-50%)}
 
-        .button-group { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
-        .btn { padding: 10px 14px; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-align: center; }
-        .btn-primary { background: #7c3aed; color: white; }
-        .btn-primary:hover { background: #6d28d9; }
-        .btn-secondary { background: #5b3fb0; color: white; }
-        .btn-secondary:hover { background: #7c5fd6; }
+/* ── Font-size toggle ── */
+.fs-ctrl{display:flex;align-items:center;gap:2px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:7px;padding:3px}
+.fs-btn{border:none;cursor:pointer;font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px;color:#64748b;background:transparent;transition:all .15s;line-height:1;letter-spacing:.02em}
+.fs-btn.active{background:#7c3aed;color:#fff}
+.fs-btn:hover:not(.active){background:#e2e8f0;color:#1e293b}
 
-        /* Views Dropdown */
-        .views-dropdown-wrapper { margin-bottom: 16px; position: relative; }
-        .views-dropdown-trigger {
-            width: 100%; padding: 8px 12px; background: #ffffff; border: 1px solid #e2e8f0;
-            border-radius: 6px; cursor: pointer; font-size: 12px; color: #1e293b;
-            display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
-        }
-        .views-dropdown-trigger:hover { border-color: #cbd5e1; }
-        .views-dropdown-trigger .vd-label { color: #64748b; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .views-dropdown-trigger .vd-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .views-dropdown-trigger .vd-arrow { font-size: 10px; color: #94a3b8; transition: transform 0.2s; }
-        .views-dropdown-trigger.open .vd-arrow { transform: rotate(180deg); }
-        .views-dropdown-menu {
-            display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
-            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 50; max-height: 200px; overflow-y: auto;
-        }
-        .views-dropdown-menu.open { display: block; }
-        .views-dropdown-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 12px; cursor: pointer; font-size: 12px; transition: all 0.15s; border-bottom: 1px solid #f1f5f9;
-        }
-        .views-dropdown-item:last-child { border-bottom: none; }
-        .views-dropdown-item:hover { background: #f8fafc; }
-        .views-dropdown-item.active { background: #ede9fe; color: #6d28d9; font-weight: 500; }
-        .views-dropdown-item .vdi-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .views-dropdown-item .vdi-delete {
-            width: 18px; height: 18px; border: none; background: transparent;
-            color: #94a3b8; cursor: pointer; font-size: 12px; padding: 0;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .views-dropdown-item .vdi-delete:hover { color: #dc2626; }
+/* ── Font-size: small ── */
+[data-fsize="sm"]{--rh:26px;--qh:20px}
+[data-fsize="sm"] .f-label{font-size:10px}
+[data-fsize="sm"] .f-bar{font-size:9px!important;padding:0 7px}
+[data-fsize="sm"] .sidebar{font-size:11px}
+[data-fsize="sm"] .g-month-name{font-size:11px}
+[data-fsize="sm"] .q-hdr-name{font-size:9px}
+[data-fsize="sm"] .f-bar-lh,[data-fsize="sm"] .f-bar-rh{width:6px}
 
-        /* Search */
-        .search-wrapper { position: relative; margin-bottom: 12px; display: flex; align-items: center; }
-        .search-bar {
-            width: 100%; padding: 8px 28px 8px 30px; background: #ffffff; border: 1px solid #e2e8f0;
-            border-radius: 6px; font-size: 12px; color: #1e293b; transition: all 0.2s;
-        }
-        .search-bar:focus { outline: none; border-color: #a78bfa; box-shadow: 0 0 0 3px rgba(167,139,250,0.15); }
-        .search-bar::placeholder { color: #94a3b8; }
-        .search-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 12px; pointer-events: none; line-height: 1; }
-        .search-clear {
-            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-            width: 18px; height: 18px; border: none; background: #e2e8f0; color: #64748b;
-            border-radius: 50%; cursor: pointer; font-size: 11px; line-height: 1;
-            display: none; align-items: center; justify-content: center; padding: 0;
-        }
-        .search-clear:hover { background: #cbd5e1; color: #1e293b; }
-        .search-clear.visible { display: flex; }
+/* ── Font-size: medium (default, no overrides needed) ── */
 
-        /* Duration Legend */
-        .duration-legend { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
-        .duration-legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 11px; color: #64748b; }
-        .duration-bar { height: 8px; border-radius: 4px; background: #7c3aed; }
-
-        /* Main Content */
-        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-        .header {
-            background: #F1F5F9; border-bottom: 1px solid #e2e8f0;
-            padding: 20px 24px; flex-shrink: 0; color: #1e293b;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .header-left h1 { font-size: 24px; margin-bottom: 4px; color: #1e293b; }
-        .header-subtitle { color: #64748b; font-size: 13px; }
-        .header-right { display: flex; gap: 12px; align-items: center; }
-        .header-btn {
-            padding: 8px 14px; border: 1px solid #e2e8f0; background: #ffffff;
-            border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;
-            color: #475569; transition: all 0.2s; white-space: nowrap;
-        }
-        .header-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
-        .header-btn.primary { background: #7c3aed; color: white; border-color: #7c3aed; }
-        .header-btn.primary:hover { background: #6d28d9; }
-        .settings-btn {
-            width: 36px; height: 36px; border: 1px solid #e2e8f0;
-            background: #ffffff; border-radius: 6px; cursor: pointer;
-            font-size: 18px; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
-        }
-        .settings-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
-
-        /* Timeline */
-        .timeline-container { flex: 1; display: flex; overflow: hidden; }
-        .timeline-grid { flex: 1; overflow-x: auto; overflow-y: auto; }
-        .timeline { min-width: 100%; }
-
-        .quarters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
-
-        .quarter {
-            background: #F1F5F9; border-right: 2px solid #e2e8f0;
-            padding: 12px 16px; min-width: 380px;
-        }
-        .quarter:last-child { border-right: none; }
-        .quarter-title { font-weight: 600; font-size: 14px; color: #1e293b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .weeks-header {
-            display: grid; grid-template-columns: repeat(12, 1fr); gap: 0;
-            margin-bottom: 8px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;
-        }
-        .week-label {
-            text-align: center; font-size: 9px; color: #64748b;
-            border-right: 1px solid rgba(203,213,225,0.5); padding: 2px 0;
-        }
-        .week-label:last-child { border-right: none; }
-        .week-label.month-start { border-left: 1px solid #7c3aed; font-weight: 600; color: #7c3aed; }
-
-        .month-headers { display: grid; grid-template-columns: repeat(3, 1fr); margin-bottom: 4px; }
-        .month-header { text-align: center; font-size: 11px; color: #475569; font-weight: 500; }
-
-        .features-area {
-            background: #BD9AF8; border-radius: 8px;
-            padding: 8px; min-height: 100px;
-        }
-
-        .features-container { display: flex; flex-direction: column; gap: 6px; min-height: 60px; }
-
-        /* Feature bars with duration-based width */
-        .feature {
-            position: relative; display: flex; align-items: center;
-            height: 32px; border-radius: 6px; cursor: grab;
-            transition: all 0.2s; font-size: 11px; user-select: none;
-            border: 1px solid rgba(255,255,255,0.15);
-            overflow: hidden;
-        }
-        /* Width = max(4, duration) / 12 * 100%. Min visual size = 4 weeks */
-
-        .feature:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); transform: translateY(-1px);
-            border-color: rgba(255,255,255,0.3);
-        }
-        .feature.dragging { opacity: 0.5; }
-
-        .feature-inner {
-            display: flex; align-items: center; gap: 6px; padding: 0 8px;
-            width: 100%; height: 100%; color: white; overflow: hidden;
-        }
-        .feature-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
-        .feature-duration-badge {
-            font-size: 9px; background: rgba(0,0,0,0.25); padding: 1px 5px;
-            border-radius: 3px; white-space: nowrap; flex-shrink: 0;
-        }
-        .feature-edit-btn {
-            width: 20px; height: 20px; border: none; background: rgba(255,255,255,0.15);
-            color: white; border-radius: 3px; cursor: pointer; font-size: 10px;
-            display: none; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .feature:hover .feature-edit-btn { display: flex; }
-        .feature-edit-btn:hover { background: rgba(255,255,255,0.3); }
-
-        /* Custom Tooltip */
-        .feature-tooltip {
-            position: fixed; z-index: 9999; pointer-events: none;
-            background: #1e293b; color: #f1f5f9; padding: 8px 12px;
-            border-radius: 6px; font-size: 12px; font-weight: 500;
-            max-width: 320px; white-space: normal; word-wrap: break-word;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            opacity: 0; transition: opacity 0.15s;
-            line-height: 1.4;
-        }
-        .feature-tooltip.visible { opacity: 1; }
-        .feature-tooltip::after {
-            content: ''; position: absolute; top: 100%; left: 16px;
-            border: 6px solid transparent; border-top-color: #1e293b;
-        }
-
-        /* Drag insertion indicator */
-        .drop-indicator {
-            height: 3px; background: #7c3aed; border-radius: 2px;
-            margin: -2px 0; transition: all 0.15s; box-shadow: 0 0 8px rgba(124,58,237,0.5);
-        }
-
-        /* Modal */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6); z-index: 1000; align-items: center; justify-content: center;
-        }
-        .modal.active { display: flex; }
-        .modal-content {
-            background: #2d1b69; border: 1px solid #5b3fb0; border-radius: 12px;
-            padding: 28px; max-width: 500px; width: 90%;
-            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.5); color: #e2e8f0;
-            max-height: 85vh; overflow-y: auto;
-        }
-        .modal-content h2 { font-size: 18px; margin-bottom: 20px; }
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 500; margin-bottom: 4px; color: #c4b5fd; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 10px 12px; background: #1e1150; border: 1px solid #5b3fb0;
-            border-radius: 6px; color: #e2e8f0; font-size: 13px;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #a78bfa; box-shadow: 0 0 0 3px rgba(167,139,250,0.2); }
-        .form-group textarea { resize: vertical; min-height: 100px; }
-
-        .duration-selector { display: flex; gap: 8px; }
-        .duration-option {
-            flex: 1; padding: 10px 8px; background: #1e1150; border: 2px solid #5b3fb0;
-            border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s;
-        }
-        .duration-option:hover { border-color: #a78bfa; background: #3b2380; }
-        .duration-option.selected { border-color: #a78bfa; background: #4c1d95; }
-        .duration-option .dur-weeks { font-size: 20px; font-weight: 700; color: #e2e8f0; }
-        .duration-option .dur-label { font-size: 10px; color: #a78bfa; margin-top: 2px; }
-        .duration-option .dur-bar { height: 4px; border-radius: 2px; background: #7c3aed; margin-top: 6px; }
-
-        .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
-        .modal-actions .btn { flex: 1; }
-        .btn-cancel { background: #5b3fb0; color: #e2e8f0; }
-        .btn-cancel:hover { background: #7c5fd6; }
-        .btn-delete { background: #dc2626; color: white; }
-        .btn-delete:hover { background: #b91c1c; }
-
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #059669; color: white; padding: 12px 20px;
-            border-radius: 6px; font-size: 13px; z-index: 2000;
-            animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-
-        /* Print */
-        @media print {
-            .sidebar, .header, .button-group { display: none; }
-            body { background: #F1F5F9; }
-            .main { height: auto; }
-            .timeline-grid { overflow: visible; }
-        }
-
-        @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #e2e8f0; max-height: 250px; }
-            .quarter { min-width: 300px; }
-        }
-
-        .scroll-hint { color: #64748b; font-size: 11px; padding: 8px; text-align: center; background: #F1F5F9; border-top: 1px solid #e2e8f0; }
-    </style>
+/* ── Font-size: large ── */
+[data-fsize="lg"]{--rh:44px;--qh:30px}
+[data-fsize="lg"] .f-label{font-size:14px}
+[data-fsize="lg"] .f-bar{font-size:12px!important;padding:0 12px}
+[data-fsize="lg"] .sidebar{font-size:13px}
+[data-fsize="lg"] .g-month-name{font-size:14px}
+[data-fsize="lg"] .g-month-yr{font-size:10px}
+[data-fsize="lg"] .q-hdr-name{font-size:11px}
+[data-fsize="lg"] .status-btn{width:18px;height:18px;font-size:9px}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <div class="views-dropdown-wrapper">
-                <div class="views-dropdown-trigger" id="viewsDropdownTrigger">
-                    <div>
-                        <div class="vd-label">Current View</div>
-                        <div class="vd-name" id="currentViewLabel">Default</div>
-                    </div>
-                    <span class="vd-arrow">▼</span>
-                </div>
-                <div class="views-dropdown-menu" id="viewsDropdownMenu"></div>
-            </div>
+<div class="drag-tip" id="dragTip"></div>
 
-            <div class="search-wrapper">
-                <span class="search-icon">⌕</span>
-                <input type="text" class="search-bar" id="searchBar" placeholder="Search features...">
-                <button class="search-clear" id="searchClear" type="button">✕</button>
-            </div>
-
-            <h2>Categories</h2>
-            <div class="category-filters" id="categoryFilters"></div>
-
-            <div class="duration-legend">
-                <h2>Duration Scale</h2>
-                <div class="duration-legend-item"><div class="duration-bar" style="width:40px"></div><span>4 weeks (1 month)</span></div>
-                <div class="duration-legend-item"><div class="duration-bar" style="width:70px"></div><span>8 weeks (2 months)</span></div>
-                <div class="duration-legend-item"><div class="duration-bar" style="width:100px"></div><span>12 weeks (full quarter)</span></div>
-            </div>
-
-            <div class="quarter-stats">
-                <h2>Q Totals</h2>
-                <div class="quarter-stat"><span class="quarter-stat-label">Q2 2026</span><span class="quarter-stat-count" id="q2-count">0</span></div>
-                <div class="quarter-stat"><span class="quarter-stat-label">Q3 2026</span><span class="quarter-stat-count" id="q3-count">0</span></div>
-                <div class="quarter-stat"><span class="quarter-stat-label">Q4 2026</span><span class="quarter-stat-count" id="q4-count">0</span></div>
-                <div class="quarter-stat"><span class="quarter-stat-label">Q1 2027</span><span class="quarter-stat-count" id="q1-count">0</span></div>
-            </div>
-
-            <div class="button-group">
-                <button class="btn btn-secondary" id="syncJiraBtn">Sync from Jira</button>
-                <button class="btn btn-secondary" id="syncDocBtn">Sync from Doc</button>
-                <button class="btn btn-secondary" id="exportCsvBtn">Export to CSV</button>
-                <button class="btn btn-secondary" id="printBtn">Print / Export</button>
-            </div>
-        </div>
-
-        <div class="main">
-            <div class="header">
-                <div class="header-left">
-                    <h1>LiZo.ai Product Roadmap</h1>
-                    <div class="header-subtitle">Interactive Gantt Chart · Q2 2026 – Q1 2027 · Drag to reposition · Click ✎ to edit</div>
-                </div>
-                <div class="header-right">
-                    <button class="header-btn primary" id="addFeatureBtn">+ Add Feature</button>
-                    <button class="header-btn" id="saveViewBtn">💾 Save View</button>
-                    <button class="settings-btn" id="settingsBtn" title="Settings">⚙</button>
-                </div>
-            </div>
-
-            <div class="timeline-container">
-                <div class="timeline-grid">
-                    <div class="timeline">
-                        <div class="quarters" id="quarterHeaders" style="position:sticky; top:0; z-index:10;"></div>
-                        <div class="quarters" id="quarterBodies" style="border-bottom:none; position:relative; z-index:1;"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="scroll-hint">← Scroll horizontally to see all quarters →</div>
-        </div>
+<!-- ── Add Item Modal ── -->
+<div class="mo" id="moAdd" style="display:none" onclick="if(event.target===this)closeModal('moAdd')">
+  <div class="mo-box">
+    <div class="mo-title">➕ Add Item</div>
+    <div class="mo-row"><div class="mo-label">Name</div>
+      <input class="mo-input" id="ai-name" placeholder="Feature name…" /></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="mo-row"><div class="mo-label">Category</div>
+        <select class="mo-select" id="ai-cat">
+          <option>UI/UX</option><option>Data</option><option>AI</option>
+          <option>Research</option><option>Portfolio</option><option>Admin</option>
+          <option>Reporting</option><option>Mobile</option><option>Bugs</option>
+        </select></div>
+      <div class="mo-row"><div class="mo-label">Quarter</div>
+        <select class="mo-select" id="ai-q">
+          <option value="Q2">Q2 2026</option><option value="Q3">Q3 2026</option>
+          <option value="Q4">Q4 2026</option><option value="Q1">Q1 2027</option>
+        </select></div>
     </div>
-
-    <!-- Add Feature Modal -->
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <h2>Add New Feature</h2>
-            <form id="addForm">
-                <div class="form-group">
-                    <label>Feature Name</label>
-                    <input type="text" id="featureName" placeholder="e.g., Portfolio Dashboard" required>
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="featureCategory" required></select>
-                </div>
-                <div class="form-group">
-                    <label>Quarter</label>
-                    <select id="featureQuarter" required>
-                        <option value="Q2">Q2 2026</option>
-                        <option value="Q3">Q3 2026</option>
-                        <option value="Q4">Q4 2026</option>
-                        <option value="Q1">Q1 2027</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Duration (1–12 weeks)</label>
-                    <input type="number" id="addDurationInput" min="1" max="12" value="4" required>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-cancel" id="cancelAddBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Feature</button>
-                </div>
-            </form>
-        </div>
+    <div class="mo-row"><div class="mo-label">Duration</div>
+      <select class="mo-select" id="ai-dur">
+        <option value="1">1 month (1–3 weeks)</option>
+        <option value="8" selected>2 months (4–8 weeks)</option>
+        <option value="12">3 months (9–12 weeks)</option>
+      </select></div>
+    <div class="mo-actions">
+      <button class="btn btn-secondary" onclick="closeModal('moAdd')">Cancel</button>
+      <button class="btn btn-primary" onclick="addItem()">Add to Roadmap</button>
     </div>
+  </div>
+</div>
 
-    <!-- Edit Feature Modal -->
-    <div class="modal" id="editModal">
-        <div class="modal-content edit-modal">
-            <h2>Edit Feature</h2>
-            <form id="editForm">
-                <div class="form-group">
-                    <label>Feature Name</label>
-                    <input type="text" id="editFeatureName" required>
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="editFeatureCategory" required></select>
-                </div>
-                <div class="form-group">
-                    <label>Quarter</label>
-                    <select id="editFeatureQuarter" required>
-                        <option value="Q2">Q2 2026</option>
-                        <option value="Q3">Q3 2026</option>
-                        <option value="Q4">Q4 2026</option>
-                        <option value="Q1">Q1 2027</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Duration (1–12 weeks)</label>
-                    <input type="number" id="editDurationInput" min="1" max="12" value="4" required>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-cancel" id="cancelEditBtn">Cancel</button>
-                    <button type="button" class="btn btn-delete" id="deleteFeatureBtn">Delete</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
+<!-- ── Save View Modal ── -->
+<div class="mo" id="moSave" style="display:none" onclick="if(event.target===this)closeModal('moSave')">
+  <div class="mo-box">
+    <div class="mo-title">💾 Save View</div>
+    <div class="mo-row"><div class="mo-label">View name</div>
+      <input class="mo-input" id="sv-name" placeholder="e.g. Sprint 3, Q2 Review…"
+             onkeydown="if(event.key==='Enter')saveViewNamed()" /></div>
+    <div style="font-size:11px;color:#64748b;margin-top:2px">Saves current positions, statuses and category filters.</div>
+    <div class="mo-actions">
+      <button class="btn btn-secondary" onclick="closeModal('moSave')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveViewNamed()">Save</button>
     </div>
+  </div>
+</div>
 
-    <!-- Settings Modal -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <h2>Settings</h2>
-            <form id="settingsForm">
-                <div class="form-group">
-                    <label>Jira Site URL</label>
-                    <input type="text" id="jiraSiteUrl" placeholder="e.g., lizo.atlassian.net" value="lizo.atlassian.net">
-                </div>
-                <div class="form-group">
-                    <label>Jira API Email</label>
-                    <input type="email" id="jiraEmail" placeholder="your-email@example.com" value="omer@lizo.ai">
-                </div>
-                <div class="form-group">
-                    <label>Jira API Token</label>
-                    <input type="password" id="jiraToken" placeholder="Your Jira API token" value="add_in_settings">
-                </div>
-                <div class="form-group">
-                    <label>Jira Project Key</label>
-                    <input type="text" id="jiraProjectKey" placeholder="e.g., APP" value="APP">
-                </div>
-                <div class="form-group">
-                    <label>Google Doc ID</label>
-                    <input type="text" id="googleDocId" placeholder="Document ID from URL" value="1Zk-OE_OOqPl8r6_rtMmFn78-WeZMeadmOA7BVqSr6-E">
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-cancel" id="cancelSettingsBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Settings</button>
-                </div>
-            </form>
-        </div>
+<!-- ── Views List Modal ── -->
+<div class="mo" id="moViews" style="display:none" onclick="if(event.target===this)closeModal('moViews')">
+  <div class="mo-box" style="min-width:380px">
+    <div class="mo-title">📂 Saved Views</div>
+    <div class="views-list" id="views-list"></div>
+    <div class="mo-actions">
+      <button class="btn btn-secondary" onclick="closeModal('moViews')">Close</button>
+      <button class="btn btn-primary" onclick="closeModal('moViews');openModal('moSave')">+ Save Current</button>
     </div>
+  </div>
+</div>
 
-    <!-- Sync Google Doc Modal -->
-    <div class="modal" id="syncDocModal">
-        <div class="modal-content">
-            <h2>Sync from Google Doc</h2>
-            <p style="margin-bottom:16px; font-size:13px; color:#a78bfa;">Paste content from your Google Doc below. Features are parsed from bullet points.</p>
-            <form id="syncDocForm">
-                <div class="form-group">
-                    <label>Paste Doc Content (one feature per line)</label>
-                    <textarea id="docContent" placeholder="• Feature Name One&#10;• Feature Name Two&#10;• Feature Name Three" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Default Quarter</label>
-                    <select id="syncDocQuarter">
-                        <option value="Q2">Q2 2026</option>
-                        <option value="Q3">Q3 2026</option>
-                        <option value="Q4">Q4 2026</option>
-                        <option value="Q1">Q1 2027</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Default Category</label>
-                    <select id="syncDocCategory"></select>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-cancel" id="cancelSyncDocBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Import Features</button>
-                </div>
-            </form>
-        </div>
+<!-- ── Upload Modal ── -->
+<div class="mo" id="moUpload" style="display:none" onclick="if(event.target===this)closeModal('moUpload')">
+  <div class="mo-box">
+    <div class="mo-title">📤 Upload Roadmap CSV</div>
+    <div class="upload-drop" id="uploadDrop" onclick="document.getElementById('uploadInput').click()"
+         ondragover="event.preventDefault();this.style.borderColor='#7c3aed'"
+         ondragleave="this.style.borderColor=''"
+         ondrop="event.preventDefault();this.style.borderColor='';handleUploadFiles(event.dataTransfer.files)">
+      Click or drag &amp; drop a CSV file here
+      <div class="upload-note">Expected columns: name, cat, q, dur<br>(id is optional — auto-assigned if missing)</div>
     </div>
-
-    <!-- Save View Modal -->
-    <div class="modal" id="saveViewModal">
-        <div class="modal-content">
-            <h2>Save View</h2>
-            <div class="form-group">
-                <label>View Name</label>
-                <input type="text" id="saveViewName" placeholder="e.g., Sprint 1 Plan" required>
-            </div>
-            <div id="recentViewsList" style="margin-bottom:16px;"></div>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-cancel" id="cancelSaveViewBtn">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirmSaveViewBtn">Save</button>
-            </div>
-        </div>
+    <input type="file" id="uploadInput" accept=".csv" style="display:none" onchange="handleUploadFiles(this.files)">
+    <div id="upload-preview" style="font-size:12px;color:#64748b;max-height:120px;overflow-y:auto"></div>
+    <div class="mo-actions">
+      <button class="btn btn-secondary" onclick="closeModal('moUpload')">Cancel</button>
+      <button class="btn btn-primary" id="upload-confirm" style="display:none" onclick="confirmUpload()">Import Items</button>
     </div>
-
-    <script>
-        const CATEGORIES = {
-            'UI/UX': '#065A82', 'Data': '#0D9488', 'AI': '#7935DE',
-            'Research': '#EA580C', 'Portfolio': '#DB2777', 'Admin': '#64748B',
-            'Reporting': '#059669', 'Mobile': '#D97706', 'Bugs': '#DC2626'
-        };
-
-        const QUARTER_MONTHS = {
-            Q2: ['Apr', 'May', 'Jun'], Q3: ['Jul', 'Aug', 'Sep'],
-            Q4: ['Oct', 'Nov', 'Dec'], Q1: ['Jan', 'Feb', 'Mar']
-        };
-
-        const FEATURES_DATA = {
-            'Q2': [
-                { name: 'Sticky Analysis Button & Auto-Save', category: 'UI/UX', duration: 4 },
-                { name: 'Strategy Research Page Layout Updates', category: 'UI/UX', duration: 8 },
-                { name: 'Manual Research Page Redesign', category: 'UI/UX', duration: 8 },
-                { name: 'MSA Research Layout Improvements', category: 'UI/UX', duration: 8 },
-                { name: 'MSA Resolution Toggle (MSA/ZIP/Asset)', category: 'UI/UX', duration: 4 },
-                { name: 'Skeleton Loading for Tables & Cards', category: 'UI/UX', duration: 4 },
-                { name: 'Tooltips for Key UI Elements', category: 'UI/UX', duration: 4 },
-                { name: 'Location Research Layout', category: 'UI/UX', duration: 8 },
-                { name: 'Dashboard Module Cards — Full-Card Click', category: 'UI/UX', duration: 4 },
-                { name: 'Fix MSA Year-over-Year KPI Data', category: 'Data', duration: 8 },
-                { name: 'Fit Score — Unified Codebase', category: 'Data', duration: 8 },
-                { name: 'Data Validation from DS Team', category: 'Data', duration: 12 },
-                { name: 'Asset Coverage Expansion (+30%)', category: 'Data', duration: 12 },
-                { name: 'Monthly Comps Data Updates', category: 'Data', duration: 4 },
-                { name: '3-Year Outlook for ZIP Codes', category: 'Data', duration: 8 },
-                { name: 'Fix Jumping Header on Refresh', category: 'Bugs', duration: 4 },
-                { name: 'Fix Donut Chart Colors', category: 'Bugs', duration: 4 },
-                { name: 'Fix MSA Active Indicator Line', category: 'Bugs', duration: 4 },
-                { name: 'Fix KPI Y-axis Volatility', category: 'Bugs', duration: 4 },
-                { name: 'Fix Manual Research Reload UI', category: 'Bugs', duration: 4 }
-            ],
-            'Q3': [
-                { name: 'Min/Max Range on KPI Cards', category: 'Data', duration: 4 },
-                { name: 'KPI Rankings "Out of Total"', category: 'Data', duration: 4 },
-                { name: 'Standardized KPI Scale Ranges', category: 'Data', duration: 8 },
-                { name: 'Construction Starts as % of Inventory', category: 'Data', duration: 8 },
-                { name: 'Weighted Criteria for Strategy KPIs', category: 'Data', duration: 8 },
-                { name: 'Top 5-10 Employers per Market', category: 'Data', duration: 8 },
-                { name: 'Trend Coloring (Green/Red Arrows)', category: 'Data', duration: 4 },
-                { name: 'Asset KPI Color-Coding vs MSA', category: 'Data', duration: 4 },
-                { name: 'Cap Rate Risk Alert vs Treasury', category: 'Data', duration: 4 },
-                { name: 'Rent Context — Asset vs ZIP/MSA Averages', category: 'Data', duration: 8 },
-                { name: 'Forecast-Based Sorting & Time Machine', category: 'Data', duration: 12 },
-                { name: 'National-Level Filtering', category: 'Research', duration: 8 },
-                { name: 'AI-Powered MSA Search Box', category: 'Research', duration: 8 },
-                { name: 'Customizable "Other" Column', category: 'Research', duration: 4 },
-                { name: 'ZIP Search Instead of Manual', category: 'Research', duration: 8 },
-                { name: 'ZIP Intelligence Narrator', category: 'AI', duration: 12 },
-                { name: 'MF Market Summary Report Generator', category: 'AI', duration: 12 },
-                { name: 'AI Formula Builder (Custom KPI Box)', category: 'AI', duration: 12 },
-                { name: 'Visual Feedback for Table Rows', category: 'UI/UX', duration: 4 },
-                { name: 'Fix PDF Export (Charts View)', category: 'Reporting', duration: 4 },
-                { name: 'Fix PDF Export (List View)', category: 'Reporting', duration: 4 },
-                { name: 'Data Export — Clean PDF & CSV Downloads', category: 'Reporting', duration: 8 }
-            ],
-            'Q4': [
-                { name: 'Landing Dashboard with LLM Chat', category: 'Portfolio', duration: 12 },
-                { name: 'Portfolio Module — Upload & Compare', category: 'Portfolio', duration: 12 },
-                { name: 'Portfolio KPI Dashboard', category: 'Portfolio', duration: 8 },
-                { name: 'Portfolio Yield Analysis vs Benchmark', category: 'Portfolio', duration: 8 },
-                { name: 'Portfolio T12 Financial Benchmarking', category: 'Portfolio', duration: 12 },
-                { name: 'Comp Benchmark — Find Look-Alike Assets', category: 'Portfolio', duration: 8 },
-                { name: 'LLM Integration (Claude/OpenAI)', category: 'AI', duration: 12 },
-                { name: 'MCP Server for LiZo Data Access', category: 'AI', duration: 8 },
-                { name: 'ChatGPT MCP Server with OAuth', category: 'AI', duration: 8 },
-                { name: 'Automated Reporting Templates', category: 'Reporting', duration: 8 },
-                { name: 'Saveable Analysis Blocks', category: 'Reporting', duration: 8 },
-                { name: 'Debt Expiration/Maturity Data', category: 'Data', duration: 8 },
-                { name: 'School District Data', category: 'Data', duration: 8 },
-                { name: 'Crime Statistics & Maps', category: 'Data', duration: 8 },
-                { name: 'MSA Market Rankings System', category: 'Data', duration: 12 },
-                { name: 'Rent Data 2.1/3.0 — Trends & Specialty Classes', category: 'Data', duration: 12 },
-                { name: 'User Tracking & Weekly Usage Summary', category: 'Data', duration: 8 },
-                { name: 'Supply vs Demand Analysis', category: 'Research', duration: 12 },
-                { name: 'Google Reviews Integration', category: 'Research', duration: 8 },
-                { name: 'Map View Enhancements & Heatmaps', category: 'Research', duration: 12 }
-            ],
-            'Q1': [
-                { name: 'Mobile App for On-Site Access', category: 'Mobile', duration: 12 },
-                { name: 'Roles & Permissions System', category: 'Admin', duration: 12 },
-                { name: 'Role-Based Permission Enforcement', category: 'Admin', duration: 8 },
-                { name: 'User Invitation & Onboarding Flow', category: 'Admin', duration: 8 },
-                { name: 'Users List & Management UI', category: 'Admin', duration: 8 },
-                { name: 'Profile Settings & Account Menu', category: 'Admin', duration: 4 },
-                { name: 'Workspace — Team Collaboration & Sharing', category: 'Admin', duration: 12 },
-                { name: 'Waiting-for-Decision Module', category: 'Portfolio', duration: 8 },
-                { name: 'Operating Asset/Property Mgmt Module', category: 'Portfolio', duration: 12 },
-                { name: 'Keep/Sell Recommendations Engine', category: 'Portfolio', duration: 12 },
-                { name: 'Ongoing Portfolio Monitoring & Alerts', category: 'Portfolio', duration: 8 },
-                { name: 'Pipeline Input Module', category: 'Portfolio', duration: 8 },
-                { name: 'Historical + Projected Demographics (5yr)', category: 'Research', duration: 8 },
-                { name: 'Regional Strategy Variance Support', category: 'Research', duration: 8 },
-                { name: 'Deal Analysis 2.0 & Sales Comps', category: 'Research', duration: 12 },
-                { name: 'Lease Trade-Out Data', category: 'Data', duration: 8 },
-                { name: 'MSA 2.0 — Block-Level Data Alignment', category: 'Data', duration: 12 },
-                { name: 'Proprietary Alpha Signals (50+ KPIs)', category: 'Data', duration: 12 },
-                { name: 'Macro-Economic Integration & Mortgage Index', category: 'Data', duration: 12 },
-                { name: 'Entry Animation for Login', category: 'UI/UX', duration: 4 }
-            ]
-        };
-
-        // Global state
-        let features = [];
-        let currentEditingFeature = null;
-        let activeCategoryFilters = new Set(Object.keys(CATEGORIES));
-        // Duration now uses number inputs directly
-        let draggedFeatureId = null;
-        let tooltipEl = null;
-        let tooltipTimeout = null;
-
-        // Saved views and sync config (in-memory only)
-        let savedViews = {};
-        let currentViewName = null;
-        let syncConfig = {
-            jiraSiteUrl: 'lizo.atlassian.net',
-            jiraEmail: 'omer@lizo.ai',
-            jiraToken: '-add here',
-            jiraProjectKey: 'APP',
-            googleDocId: '1Zk-OE_OOqPl8r6_rtMmFn78-WeZMeadmOA7BVqSr6-E'
-        };
-
-        // localStorage helpers
-        function persist() {
-            try {
-                localStorage.setItem('lizo-views', JSON.stringify(savedViews));
-                localStorage.setItem('lizo-current-view', currentViewName || '');
-                localStorage.setItem('lizo-features', JSON.stringify(features));
-                localStorage.setItem('lizo-filters', JSON.stringify([...activeCategoryFilters]));
-                localStorage.setItem('lizo-config', JSON.stringify(syncConfig));
-            } catch(e) { /* localStorage unavailable */ }
-        }
-
-        function loadPersisted() {
-            try {
-                const sv = localStorage.getItem('lizo-views');
-                if (sv) savedViews = JSON.parse(sv);
-                const cv = localStorage.getItem('lizo-current-view');
-                if (cv) currentViewName = cv || null;
-                const ft = localStorage.getItem('lizo-features');
-                if (ft) { features = JSON.parse(ft); return true; }
-                const fl = localStorage.getItem('lizo-filters');
-                if (fl) activeCategoryFilters = new Set(JSON.parse(fl));
-                const cfg = localStorage.getItem('lizo-config');
-                if (cfg) syncConfig = { ...syncConfig, ...JSON.parse(cfg) };
-            } catch(e) { /* localStorage unavailable */ }
-            return false;
-        }
-
-        function init() {
-            tooltipEl = document.createElement('div');
-            tooltipEl.className = 'feature-tooltip';
-            document.body.appendChild(tooltipEl);
-
-            buildQuarterHeaders();
-            buildQuarterBodies();
-            populateCategoryFilters();
-            populateCategorySelects();
-
-            // Try restoring from localStorage; fall back to defaults
-            const restored = loadPersisted();
-            if (!restored) loadFeatures();
-
-            // Restore filter checkboxes to match loaded state
-            document.querySelectorAll('.category-filter').forEach(label => {
-                const cat = label.querySelector('input').dataset.category;
-                label.querySelector('input').checked = activeCategoryFilters.has(cat);
-                label.classList.toggle('active', activeCategoryFilters.has(cat));
-            });
-
-            setupEventListeners();
-            setupDurationSelectors();
-            initSavedViews();
-            renderFeatures();
-            updateQuarterCounts();
-        }
-
-        function buildQuarterHeaders() {
-            const container = document.getElementById('quarterHeaders');
-            ['Q2','Q3','Q4','Q1'].forEach(q => {
-                const year = q === 'Q1' ? '2027' : '2026';
-                const months = QUARTER_MONTHS[q];
-                const div = document.createElement('div');
-                div.className = 'quarter';
-                div.style.padding = '12px 16px 8px';
-                div.innerHTML = `
-                    <div class="quarter-title">${q} ${year}</div>
-                    <div class="month-headers">
-                        ${months.map(m => `<div class="month-header">${m}</div>`).join('')}
-                    </div>
-                    <div class="weeks-header">
-                        ${Array.from({length:12}, (_,i) => {
-                            const cls = i % 4 === 0 ? 'week-label month-start' : 'week-label';
-                            return `<div class="${cls}">${i+1}</div>`;
-                        }).join('')}
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function buildQuarterBodies() {
-            const container = document.getElementById('quarterBodies');
-            ['Q2','Q3','Q4','Q1'].forEach(q => {
-                const div = document.createElement('div');
-                div.className = 'quarter';
-                div.style.background = 'transparent';
-                div.style.padding = '8px';
-                div.innerHTML = `<div class="features-area"><div class="features-container" data-quarter="${q}"></div></div>`;
-                container.appendChild(div);
-            });
-            setTimeout(setupDropZones, 50);
-        }
-
-        function populateCategoryFilters() {
-            const container = document.getElementById('categoryFilters');
-            Object.entries(CATEGORIES).forEach(([category, color]) => {
-                const label = document.createElement('label');
-                label.className = 'category-filter active';
-                label.innerHTML = `<input type="checkbox" checked data-category="${category}"><div class="color-indicator" style="background-color: ${color}"></div><span>${category}</span>`;
-                label.querySelector('input').addEventListener('change', (e) => {
-                    if (e.target.checked) { activeCategoryFilters.add(category); label.classList.add('active'); }
-                    else { activeCategoryFilters.delete(category); label.classList.remove('active'); }
-                    renderFeatures(); updateQuarterCounts(); autoSaveLastSession();
-                });
-                container.appendChild(label);
-            });
-        }
-
-        function populateCategorySelects() {
-            ['featureCategory','editFeatureCategory','syncDocCategory'].forEach(id => {
-                const sel = document.getElementById(id);
-                if (sel) {
-                    Object.keys(CATEGORIES).forEach(cat => {
-                        const opt = document.createElement('option');
-                        opt.value = cat; opt.textContent = cat;
-                        sel.appendChild(opt);
-                    });
-                }
-            });
-        }
-
-        function setupDurationSelectors() {
-            // Now using number inputs, no setup needed
-        }
-
-        function loadFeatures() {
-            features = [];
-            let id = 0;
-            Object.entries(FEATURES_DATA).forEach(([quarter, qf]) => {
-                qf.forEach(f => { features.push({ id: id++, ...f, quarter }); });
-            });
-        }
-
-        function setupEventListeners() {
-            document.getElementById('addFeatureBtn').addEventListener('click', () => {
-                document.getElementById('addDurationInput').value = 4;
-                document.getElementById('addModal').classList.add('active');
-                document.getElementById('featureName').focus();
-            });
-            document.getElementById('addForm').addEventListener('submit', handleAddFeature);
-            document.getElementById('cancelAddBtn').addEventListener('click', closeModal);
-            document.getElementById('editForm').addEventListener('submit', handleEditFeature);
-            document.getElementById('cancelEditBtn').addEventListener('click', closeModal);
-            document.getElementById('deleteFeatureBtn').addEventListener('click', handleDeleteFeature);
-            document.getElementById('printBtn').addEventListener('click', () => window.print());
-            document.getElementById('settingsBtn').addEventListener('click', () => {
-                document.getElementById('jiraSiteUrl').value = syncConfig.jiraSiteUrl;
-                document.getElementById('jiraEmail').value = syncConfig.jiraEmail;
-                document.getElementById('jiraToken').value = syncConfig.jiraToken;
-                document.getElementById('jiraProjectKey').value = syncConfig.jiraProjectKey;
-                document.getElementById('googleDocId').value = syncConfig.googleDocId;
-                document.getElementById('settingsModal').classList.add('active');
-            });
-            document.getElementById('settingsForm').addEventListener('submit', handleSettingsSave);
-            document.getElementById('cancelSettingsBtn').addEventListener('click', closeModal);
-            document.getElementById('syncJiraBtn').addEventListener('click', handleSyncJira);
-            document.getElementById('syncDocBtn').addEventListener('click', () => {
-                document.getElementById('syncDocModal').classList.add('active');
-            });
-            document.getElementById('syncDocForm').addEventListener('submit', handleSyncDoc);
-            document.getElementById('cancelSyncDocBtn').addEventListener('click', closeModal);
-            document.getElementById('exportCsvBtn').addEventListener('click', handleExportCsv);
-            document.getElementById('saveViewBtn').addEventListener('click', showSaveViewModal);
-            document.getElementById('confirmSaveViewBtn').addEventListener('click', handleSaveView);
-            document.getElementById('cancelSaveViewBtn').addEventListener('click', closeModal);
-            ['addModal','editModal','settingsModal','syncDocModal','saveViewModal'].forEach(id => {
-                document.getElementById(id).addEventListener('click', (e) => { if (e.target.id === id) closeModal(); });
-            });
-        }
-
-        function renderFeatures() {
-            document.querySelectorAll('.features-container').forEach(c => c.innerHTML = '');
-            const quarters = { Q1: [], Q2: [], Q3: [], Q4: [] };
-            features.forEach(f => {
-                if (!activeCategoryFilters.has(f.category)) return;
-                // search doesn't filter — highlighting is done in createFeatureElement
-                quarters[f.quarter].push(f);
-            });
-
-            Object.entries(quarters).forEach(([quarter, qf]) => {
-                const container = document.querySelector(`.features-container[data-quarter="${quarter}"]`);
-                if (container) qf.forEach(f => container.appendChild(createFeatureElement(f)));
-            });
-        }
-
-        function createFeatureElement(feature) {
-            const div = document.createElement('div');
-            div.className = 'feature';
-            const dur = feature.duration || 4;
-            const visualWeeks = Math.max(8, Math.min(12, dur));
-            div.style.width = `calc(${(visualWeeks / 12 * 100).toFixed(1)}% - 4px)`;
-            div.draggable = true;
-            div.dataset.featureId = feature.id;
-            const color = CATEGORIES[feature.category];
-            const isMatch = !searchQuery || feature.name.toLowerCase().includes(searchQuery);
-            div.style.background = color;
-            if (searchQuery && !isMatch) {
-                div.style.opacity = '0.2';
-                div.style.transform = 'scale(0.97)';
-            } else if (searchQuery && isMatch) {
-                div.style.boxShadow = '0 0 0 2px #fff, 0 0 12px rgba(124,58,237,0.6)';
-            }
-
-            div.innerHTML = `
-                <div class="feature-inner">
-                    <div class="feature-label">${feature.name}</div>
-                    <div class="feature-duration-badge">${dur}w</div>
-                    <button class="feature-edit-btn" title="Edit">✎</button>
-                </div>
-            `;
-
-            div.querySelector('.feature-edit-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                showEditModal(feature.id);
-            });
-
-            // Tooltip on hover
-            div.addEventListener('mouseenter', (e) => {
-                const label = div.querySelector('.feature-label');
-                if (label.scrollWidth > label.clientWidth) {
-                    clearTimeout(tooltipTimeout);
-                    tooltipTimeout = setTimeout(() => {
-                        tooltipEl.textContent = feature.name;
-                        const rect = div.getBoundingClientRect();
-                        tooltipEl.style.left = rect.left + 'px';
-                        tooltipEl.style.top = (rect.top - tooltipEl.offsetHeight - 10) + 'px';
-                        tooltipEl.classList.add('visible');
-                    }, 350);
-                }
-            });
-            div.addEventListener('mouseleave', () => {
-                clearTimeout(tooltipTimeout);
-                tooltipEl.classList.remove('visible');
-            });
-            div.addEventListener('mousemove', (e) => {
-                if (tooltipEl.classList.contains('visible')) {
-                    tooltipEl.style.left = (e.clientX - 16) + 'px';
-                    const rect = div.getBoundingClientRect();
-                    tooltipEl.style.top = (rect.top - tooltipEl.offsetHeight - 10) + 'px';
-                }
-            });
-
-            // Drag start
-            div.addEventListener('dragstart', (e) => {
-                draggedFeatureId = feature.id;
-                e.dataTransfer.effectAllowed = 'move';
-                e.dataTransfer.setData('text/plain', feature.id);
-                requestAnimationFrame(() => div.classList.add('dragging'));
-                clearTimeout(tooltipTimeout);
-                tooltipEl.classList.remove('visible');
-            });
-            div.addEventListener('dragend', () => {
-                div.classList.remove('dragging');
-                draggedFeatureId = null;
-                document.querySelectorAll('.drop-indicator').forEach(el => el.remove());
-                document.querySelectorAll('.features-area').forEach(el => el.style.background = '');
-            });
-
-            return div;
-        }
-
-        function getDropIndex(container, y) {
-            const children = [...container.querySelectorAll('.feature:not(.dragging)')];
-            for (let i = 0; i < children.length; i++) {
-                const rect = children[i].getBoundingClientRect();
-                if (y < rect.top + rect.height / 2) return i;
-            }
-            return children.length;
-        }
-
-        function setupDropZones() {
-            document.querySelectorAll('.features-container').forEach(container => {
-                container.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'move';
-                    container.parentElement.style.background = 'rgba(124,58,237,0.12)';
-
-                    const existingIndicator = container.querySelector('.drop-indicator');
-                    if (existingIndicator) existingIndicator.remove();
-
-                    const indicator = document.createElement('div');
-                    indicator.className = 'drop-indicator';
-                    const dropIdx = getDropIndex(container, e.clientY);
-                    const featureEls = [...container.querySelectorAll('.feature:not(.dragging)')];
-
-                    if (dropIdx < featureEls.length) {
-                        container.insertBefore(indicator, featureEls[dropIdx]);
-                    } else {
-                        container.appendChild(indicator);
-                    }
-                });
-
-                container.addEventListener('dragleave', (e) => {
-                    if (!container.contains(e.relatedTarget)) {
-                        container.parentElement.style.background = '';
-                        const ind = container.querySelector('.drop-indicator');
-                        if (ind) ind.remove();
-                    }
-                });
-
-                container.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    container.parentElement.style.background = '';
-                    const ind = container.querySelector('.drop-indicator');
-                    if (ind) ind.remove();
-
-                    const fid = draggedFeatureId;
-                    if (fid === null) return;
-
-                    const targetQuarter = container.dataset.quarter;
-                    const dropIdx = getDropIndex(container, e.clientY);
-
-                    const featureObj = features.find(f => f.id === fid);
-                    if (!featureObj) return;
-
-                    features = features.filter(f => f.id !== fid);
-                    featureObj.quarter = targetQuarter;
-
-                    const quarterFeatures = features.filter(f => f.quarter === targetQuarter && activeCategoryFilters.has(f.category));
-                    let insertAfterIdx = -1;
-                    if (dropIdx > 0 && dropIdx <= quarterFeatures.length) {
-                        insertAfterIdx = features.indexOf(quarterFeatures[dropIdx - 1]);
-                    } else if (dropIdx === 0 && quarterFeatures.length > 0) {
-                        insertAfterIdx = features.indexOf(quarterFeatures[0]) - 1;
-                    } else {
-                        insertAfterIdx = features.length - 1;
-                    }
-
-                    features.splice(insertAfterIdx + 1, 0, featureObj);
-                    renderFeatures();
-                    updateQuarterCounts();
-                    autoSaveLastSession();
-                });
-            });
-        }
-
-        function showEditModal(featureId) {
-            currentEditingFeature = features.find(f => f.id === featureId);
-            if (!currentEditingFeature) return;
-            document.getElementById('editFeatureName').value = currentEditingFeature.name;
-            document.getElementById('editFeatureCategory').value = currentEditingFeature.category;
-            document.getElementById('editFeatureQuarter').value = currentEditingFeature.quarter;
-            document.getElementById('editDurationInput').value = currentEditingFeature.duration || 4;
-            document.getElementById('editModal').classList.add('active');
-        }
-
-        function closeModal() {
-            document.getElementById('addModal').classList.remove('active');
-            document.getElementById('editModal').classList.remove('active');
-            document.getElementById('settingsModal').classList.remove('active');
-            document.getElementById('syncDocModal').classList.remove('active');
-            document.getElementById('saveViewModal').classList.remove('active');
-            document.getElementById('addForm').reset();
-        }
-
-        function handleAddFeature(e) {
-            e.preventDefault();
-            const name = document.getElementById('featureName').value.trim();
-            const category = document.getElementById('featureCategory').value;
-            const quarter = document.getElementById('featureQuarter').value;
-            if (name) {
-                const dur = Math.max(1, Math.min(12, parseInt(document.getElementById('addDurationInput').value) || 4));
-                features.push({ id: Math.max(...features.map(f => f.id), -1) + 1, name, category, quarter, duration: dur });
-                renderFeatures(); updateQuarterCounts(); closeModal(); autoSaveLastSession();
-            }
-        }
-
-        function handleEditFeature(e) {
-            e.preventDefault();
-            if (currentEditingFeature) {
-                currentEditingFeature.name = document.getElementById('editFeatureName').value.trim();
-                currentEditingFeature.category = document.getElementById('editFeatureCategory').value;
-                currentEditingFeature.quarter = document.getElementById('editFeatureQuarter').value;
-                currentEditingFeature.duration = Math.max(1, Math.min(12, parseInt(document.getElementById('editDurationInput').value) || 4));
-                renderFeatures(); updateQuarterCounts(); closeModal(); autoSaveLastSession();
-            }
-        }
-
-        function handleDeleteFeature() {
-            if (currentEditingFeature && confirm('Delete this feature?')) {
-                features = features.filter(f => f.id !== currentEditingFeature.id);
-                renderFeatures(); updateQuarterCounts(); closeModal(); autoSaveLastSession();
-            }
-        }
-
-        function updateQuarterCounts() {
-            const q = { Q1: 0, Q2: 0, Q3: 0, Q4: 0 };
-            features.forEach(f => { if (activeCategoryFilters.has(f.category)) q[f.quarter]++; });
-            document.getElementById('q2-count').textContent = q.Q2;
-            document.getElementById('q3-count').textContent = q.Q3;
-            document.getElementById('q4-count').textContent = q.Q4;
-            document.getElementById('q1-count').textContent = q.Q1;
-        }
-
-        // SAVED VIEWS FEATURE
-        let searchQuery = '';
-
-        function initSavedViews() {
-            savedViews['Default'] = JSON.parse(JSON.stringify(FEATURES_DATA));
-            if (!savedViews['Last Session']) savedViews['Last Session'] = JSON.parse(JSON.stringify(FEATURES_DATA));
-            renderSavedViewsList();
-
-            // Views dropdown toggle
-            const trigger = document.getElementById('viewsDropdownTrigger');
-            const menu = document.getElementById('viewsDropdownMenu');
-            trigger.addEventListener('click', () => {
-                trigger.classList.toggle('open');
-                menu.classList.toggle('open');
-            });
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.views-dropdown-wrapper')) {
-                    trigger.classList.remove('open');
-                    menu.classList.remove('open');
-                }
-            });
-
-            // Search bar
-            const searchInput = document.getElementById('searchBar');
-            const searchClearBtn = document.getElementById('searchClear');
-            searchInput.addEventListener('input', (e) => {
-                searchQuery = e.target.value.trim().toLowerCase();
-                searchClearBtn.classList.toggle('visible', searchQuery.length > 0);
-                renderFeatures();
-            });
-            searchClearBtn.addEventListener('click', () => {
-                searchInput.value = '';
-                searchQuery = '';
-                searchClearBtn.classList.remove('visible');
-                renderFeatures();
-            });
-        }
-
-        function renderSavedViewsList() {
-            // Update dropdown label
-            document.getElementById('currentViewLabel').textContent = currentViewName || 'Default';
-
-            const menu = document.getElementById('viewsDropdownMenu');
-            menu.innerHTML = '';
-            Object.keys(savedViews).forEach(viewName => {
-                const item = document.createElement('div');
-                item.className = 'views-dropdown-item' + (currentViewName === viewName ? ' active' : '');
-                item.innerHTML = `
-                    <span class="vdi-name">${viewName}</span>
-                    ${viewName !== 'Default' ? '<button class="vdi-delete" type="button" title="Delete">✕</button>' : ''}
-                `;
-                item.querySelector('.vdi-name').addEventListener('click', () => {
-                    loadView(viewName);
-                    document.getElementById('viewsDropdownTrigger').classList.remove('open');
-                    menu.classList.remove('open');
-                });
-                const delBtn = item.querySelector('.vdi-delete');
-                if (delBtn) {
-                    delBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (confirm(`Delete view "${viewName}"?`)) {
-                            delete savedViews[viewName];
-                            if (currentViewName === viewName) currentViewName = null;
-                            renderSavedViewsList();
-                            persist();
-                        }
-                    });
-                }
-                menu.appendChild(item);
-            });
-        }
-
-        function showSaveViewModal() {
-            document.getElementById('saveViewName').value = currentViewName && currentViewName !== 'Last Session' && currentViewName !== 'Default' ? currentViewName : '';
-            // Populate recent saves
-            const list = document.getElementById('recentViewsList');
-            const userViews = Object.keys(savedViews).filter(n => n !== 'Default' && n !== 'Last Session');
-            if (userViews.length > 0) {
-                list.innerHTML = '<label style="display:block;font-size:12px;color:#c4b5fd;margin-bottom:6px;">Overwrite existing:</label>' +
-                    userViews.map(n => `<div style="padding:6px 10px;background:#1e1150;border:1px solid #5b3fb0;border-radius:6px;margin-bottom:4px;cursor:pointer;font-size:12px;color:#e2e8f0;" class="recent-view-pick" data-name="${n}">${n}</div>`).join('');
-                list.querySelectorAll('.recent-view-pick').forEach(el => {
-                    el.addEventListener('click', () => {
-                        document.getElementById('saveViewName').value = el.dataset.name;
-                        list.querySelectorAll('.recent-view-pick').forEach(e => e.style.borderColor = '#5b3fb0');
-                        el.style.borderColor = '#a78bfa';
-                    });
-                });
-            } else {
-                list.innerHTML = '';
-            }
-            document.getElementById('saveViewModal').classList.add('active');
-            document.getElementById('saveViewName').focus();
-        }
-
-        function handleSaveView() {
-            const name = document.getElementById('saveViewName').value.trim();
-            if (!name) { showToast('Please enter a view name'); return; }
-            const isOverwrite = !!savedViews[name];
-            savedViews[name] = {
-                features: JSON.parse(JSON.stringify(features)),
-                filters: [...activeCategoryFilters]
-            };
-            currentViewName = name;
-            renderSavedViewsList();
-            persist();
-            closeModal();
-            showToast(isOverwrite ? `View "${name}" overwritten!` : `View "${name}" saved!`);
-        }
-
-        function loadView(viewName) {
-            if (!savedViews[viewName]) return;
-            const view = savedViews[viewName];
-
-            if (viewName === 'Default') {
-                loadFeatures();
-                activeCategoryFilters = new Set(Object.keys(CATEGORIES));
-            } else if (view.features) {
-                features = JSON.parse(JSON.stringify(view.features));
-                activeCategoryFilters = new Set(Array.isArray(view.filters) ? view.filters : Object.keys(CATEGORIES));
-            }
-
-            currentViewName = viewName;
-            document.querySelectorAll('.category-filter').forEach(label => {
-                const cat = label.querySelector('input').dataset.category;
-                if (activeCategoryFilters.has(cat)) {
-                    label.classList.add('active');
-                    label.querySelector('input').checked = true;
-                } else {
-                    label.classList.remove('active');
-                    label.querySelector('input').checked = false;
-                }
-            });
-            renderFeatures();
-            updateQuarterCounts();
-            renderSavedViewsList();
-            persist();
-            showToast(`Loaded view: "${viewName}"`);
-        }
-
-        function autoSaveLastSession() {
-            savedViews['Last Session'] = {
-                features: JSON.parse(JSON.stringify(features)),
-                filters: [...activeCategoryFilters]
-            };
-            persist();
-        }
-
-        // JIRA + GOOGLE DOC SYNC
-        function handleSettingsSave(e) {
-            e.preventDefault();
-            syncConfig.jiraSiteUrl = document.getElementById('jiraSiteUrl').value.trim();
-            syncConfig.jiraEmail = document.getElementById('jiraEmail').value.trim();
-            syncConfig.jiraToken = document.getElementById('jiraToken').value.trim();
-            syncConfig.jiraProjectKey = document.getElementById('jiraProjectKey').value.trim();
-            syncConfig.googleDocId = document.getElementById('googleDocId').value.trim();
-            closeModal();
-            persist();
-            showToast('Settings saved!');
-        }
-
-        function processJiraData(data) {
-            if (!data.issues || !data.issues.length) {
-                showToast('No issues found in Jira response.');
-                return;
-            }
-            let added = 0, existing = 0;
-            const categoryMap = { 'Bug': 'Bugs', 'Story': 'Research', 'Epic': 'Research', 'Task': 'Data', 'Sub-task': 'UI/UX' };
-            data.issues.forEach(issue => {
-                const issueName = issue.fields.summary;
-                const issueType = issue.fields.issuetype ? issue.fields.issuetype.name : 'Story';
-                const isDuplicate = features.some(f =>
-                    f.name.toLowerCase().trim() === issueName.toLowerCase().trim()
-                );
-                if (!isDuplicate) {
-                    features.push({
-                        id: Math.max(...features.map(f => f.id), -1) + 1,
-                        name: issueName,
-                        category: categoryMap[issueType] || 'Research',
-                        quarter: 'Q2',
-                        duration: 8,
-                        source: 'Jira'
-                    });
-                    added++;
-                } else {
-                    existing++;
-                }
-            });
-            renderFeatures();
-            updateQuarterCounts();
-            autoSaveLastSession();
-            showToast(`Jira sync: ${added} new added, ${existing} already existed`);
-        }
-
-        function handleSyncJira() {
-            if (!syncConfig.jiraEmail || !syncConfig.jiraToken) {
-                alert('Please configure Jira settings first (gear icon).');
-                return;
-            }
-
-            showToast('Syncing from Jira...');
-
-            const auth = btoa(syncConfig.jiraEmail + ':' + syncConfig.jiraToken);
-            const jql = `project=${syncConfig.jiraProjectKey} AND status!=Done`;
-            const directUrl = `https://${syncConfig.jiraSiteUrl}/rest/api/3/search?jql=${encodeURIComponent(jql)}&maxResults=100&fields=summary,issuetype,status,priority`;
-
-            // Try direct first
-            fetch(directUrl, {
-                headers: { 'Authorization': 'Basic ' + auth, 'Accept': 'application/json' }
-            })
-            .then(r => {
-                if (!r.ok) throw new Error('Direct failed: ' + r.status);
-                return r.json();
-            })
-            .then(data => processJiraData(data))
-            .catch(directErr => {
-                // Direct failed (CORS) — try via corsproxy.io
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(directUrl)}`;
-                fetch(proxyUrl, {
-                    headers: { 'Authorization': 'Basic ' + auth, 'Accept': 'application/json' }
-                })
-                .then(r => {
-                    if (!r.ok) throw new Error('Proxy also failed: ' + r.status);
-                    return r.json();
-                })
-                .then(data => processJiraData(data))
-                .catch(proxyErr => {
-                    showToast('CORS blocked. Use "Sync Doc" to paste Jira data manually, or run from localhost.');
-                    console.error('Direct error:', directErr, 'Proxy error:', proxyErr);
-                });
-            });
-        }
-
-        function handleSyncDoc(e) {
-            e.preventDefault();
-            const content = document.getElementById('docContent').value.trim();
-            const quarter = document.getElementById('syncDocQuarter').value;
-            const category = document.getElementById('syncDocCategory').value;
-
-            if (!content) {
-                alert('Please paste content.');
-                return;
-            }
-
-            const lines = content.split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(l => l);
-            let added = 0, existing = 0;
-
-            lines.forEach(featureName => {
-                if (!featureName) return;
-                const isDuplicate = features.some(f =>
-                    f.name.toLowerCase().trim() === featureName.toLowerCase().trim()
-                );
-
-                if (!isDuplicate) {
-                    features.push({
-                        id: Math.max(...features.map(f => f.id), -1) + 1,
-                        name: featureName,
-                        category: category || 'Research',
-                        quarter: quarter,
-                        duration: 8
-                    });
-                    added++;
-                } else {
-                    existing++;
-                }
-            });
-
-            renderFeatures();
-            updateQuarterCounts();
-            autoSaveLastSession();
-            closeModal();
-            showToast(`Imported: ${added} new, ${existing} already existed`);
-        }
-
-        // CSV EXPORT
-        function handleExportCsv() {
-            const rows = [['Feature Name', 'Category', 'Quarter', 'Duration (weeks)', 'Source']];
-            features.forEach(f => {
-                rows.push([f.name, f.category, f.quarter, f.duration, 'Roadmap']);
-            });
-
-            const csv = rows.map(row => row.map(cell => `"${cell}"`).join('\t')).join('\n');
-
-            // Copy to clipboard
-            navigator.clipboard.writeText(csv).then(() => {
-                showToast('Copied to clipboard! Open Google Sheets and paste (Ctrl+V)');
-            }).catch(() => {
-                // Fallback: download
-                const blob = new Blob([csv], { type: 'text/plain' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'lizo-roadmap.tsv';
-                a.click();
-                window.URL.revokeObjectURL(url);
-                showToast('Downloaded as TSV file');
-            });
-        }
-
-        function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.animation = 'slideUp 0.3s ease-out reverse';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        init();
-    </script>
+  </div>
+</div>
+
+<div class="hdr">
+  <div class="logo"><em>lizo</em>.ai Product Roadmap</div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('gantt')">📅 Roadmap</button>
+    <button class="tab-btn" onclick="switchTab('weekly')">📊 This Week</button>
+  </div>
+  <div class="hdr-right">
+    <button class="nav-btn" id="prevBtn" onclick="navMonths(-1)" disabled>&#8249;</button>
+    <span class="nav-range" id="navRange">Apr – Sep '26</span>
+    <button class="nav-btn" id="nextBtn" onclick="navMonths(1)">&#8250;</button>
+    <div class="zoom-ctrl" style="margin-left:6px">
+      <label>Zoom</label>
+      <input type="range" id="zoomSlider" min="1" max="4" step="1" value="4" oninput="setZoom(+this.value)">
+      <span class="zoom-val" id="zoomVal">4w</span>
+    </div>
+    <div class="fs-ctrl" style="margin-left:4px">
+      <button class="fs-btn" data-sz="sm" onclick="setFontSize('sm')">S</button>
+      <button class="fs-btn active" data-sz="md" onclick="setFontSize('md')">M</button>
+      <button class="fs-btn" data-sz="lg" onclick="setFontSize('lg')">L</button>
+    </div>
+    <button class="btn btn-secondary" onclick="openModal('moAdd')" style="margin-left:2px">➕ Add Item</button>
+    <button class="btn btn-secondary" onclick="openModal('moUpload')">📤 Upload</button>
+    <button class="btn btn-secondary" onclick="openModal('moSave')">💾 Save View</button>
+    <button class="btn btn-secondary" onclick="openViewsModal()">📂 Views</button>
+    <button class="btn btn-secondary" onclick="exportCSV()">Export CSV</button>
+    <button class="btn btn-primary" onclick="clearAll()">Reset</button>
+  </div>
+</div>
+<div class="body">
+  <div class="sidebar">
+    <div class="s-title">Categories</div><div id="cat-filters"></div>
+    <div class="s-title">Status</div>
+    <div class="leg-item"><div class="leg-dot done"></div> Done</div>
+    <div class="leg-item"><div class="leg-dot partial"></div> In Progress</div>
+    <div class="leg-item"><div class="leg-dot todo"></div> Not Started</div>
+    <div class="s-title">Quarters</div><div id="q-stats"></div>
+    <div class="s-title">Progress</div>
+    <div id="prog" style="padding:3px 4px;font-size:11px;color:#94a3b8;line-height:1.7"></div>
+  </div>
+  <div id="tab-gantt" class="tab-content active">
+    <div class="gantt-wrap" id="ganttWrap"><div class="gantt-inner" id="ganttInner"></div></div>
+  </div>
+  <div id="tab-weekly" class="tab-content"><div class="weekly-wrap" id="weeklyWrap"></div></div>
+</div>
+
+<script>
+/* ════ DATA ════ */
+const FEATURES = [
+  {id:48, name:"LLM Integration (Claude/OpenAI)",                       cat:"AI",        q:"Q2",dur:1},
+  {id:42, name:"Landing Dashboard with LLM Chat",                       cat:"Portfolio", q:"Q2",dur:4},
+  {id:50, name:"ChatGPT MCP Server with OAuth",                         cat:"AI",        q:"Q2",dur:8},
+  {id:54, name:"School District Data",                                   cat:"Data",      q:"Q2",dur:8},
+  {id:44, name:"Portfolio KPI Dashboard",                                cat:"Portfolio", q:"Q2",dur:8},
+  {id:43, name:"Portfolio Module — Upload & Compare",                    cat:"Portfolio", q:"Q2",dur:12},
+  {id:83, name:"Asset page",                                             cat:"Research",  q:"Q2",dur:4},
+  {id:12, name:"Asset Coverage Expansion (+30%)",                        cat:"Data",      q:"Q2",dur:12},
+  {id:18, name:"Fix KPI Y-axis Volatility",                              cat:"Bugs",      q:"Q2",dur:4},
+  {id:19, name:"Fix Manual Research Reload UI",                          cat:"Bugs",      q:"Q2",dur:4},
+  {id:84, name:"Executives view",                                        cat:"UI/UX",     q:"Q2",dur:8},
+  {id:85, name:"Comparison — location vs saved strategy",                cat:"UI/UX",     q:"Q2",dur:8},
+  {id:86, name:"Off/on market sourcing",                                 cat:"UI/UX",     q:"Q2",dur:8},
+  {id:87, name:"Share a Profile",                                        cat:"UI/UX",     q:"Q2",dur:8},
+  {id:88, name:"Strategy agent 2.0",                                     cat:"UI/UX",     q:"Q2",dur:8},
+  {id:89, name:"Sub market",                                             cat:"UI/UX",     q:"Q2",dur:8},
+  {id:90, name:"Property Tax column per zip",                            cat:"UI/UX",     q:"Q2",dur:8},
+  {id:91, name:"Buy-vs-rent calculator",                                 cat:"UI/UX",     q:"Q2",dur:8},
+  {id:92, name:"Add Zoning information",                                 cat:"UI/UX",     q:"Q2",dur:8},
+  {id:96, name:"Cluster zips by Cities or regions",                      cat:"UI/UX",     q:"Q2",dur:8},
+  {id:97, name:"Mortgage spend index",                                   cat:"UI/UX",     q:"Q2",dur:8},
+  {id:98, name:"Strategy Research Page Enhancements",                    cat:"UI/UX",     q:"Q2",dur:8},
+  {id:99, name:"Filter MSAs by ranking",                                 cat:"UI/UX",     q:"Q2",dur:8},
+  {id:100,name:"Map View Integration — MSA Screen",                      cat:"UI/UX",     q:"Q2",dur:8},
+  {id:101,name:"LLM integration (UI)",                                   cat:"UI/UX",     q:"Q2",dur:8},
+  {id:102,name:"Benchmark asset",                                        cat:"UI/UX",     q:"Q2",dur:8},
+  {id:103,name:"Choosing from the map",                                  cat:"UI/UX",     q:"Q2",dur:8},
+  {id:104,name:"KPI Clarity",                                            cat:"UI/UX",     q:"Q2",dur:8},
+  {id:105,name:"AI address/zipcode analysis",                            cat:"UI/UX",     q:"Q2",dur:8},
+  {id:106,name:"Asset-Level Intelligence & Recommendations",             cat:"UI/UX",     q:"Q2",dur:8},
+  {id:107,name:"Ongoing Monitoring & Alerts for portfolio",              cat:"UI/UX",     q:"Q2",dur:8},
+  {id:108,name:"Quick portfolio upload",                                 cat:"UI/UX",     q:"Q2",dur:8},
+  {id:109,name:"Jobs data",                                              cat:"UI/UX",     q:"Q2",dur:8},
+  {id:110,name:"Forecast-based Sorting",                                 cat:"UI/UX",     q:"Q2",dur:8},
+  {id:111,name:"Connect email & pull broker emails directly",            cat:"UI/UX",     q:"Q2",dur:4},
+  {id:23, name:"Construction Starts as % of Inventory",                  cat:"Data",      q:"Q3",dur:8},
+  {id:24, name:"Weighted Criteria for Strategy KPIs",                    cat:"Data",      q:"Q3",dur:8},
+  {id:25, name:"Top 5-10 Employers per Market",                          cat:"Data",      q:"Q3",dur:8},
+  {id:26, name:"Trend Coloring (Green/Red Arrows)",                      cat:"Data",      q:"Q3",dur:4},
+  {id:27, name:"Asset KPI Color-Coding vs MSA",                          cat:"Data",      q:"Q3",dur:4},
+  {id:22, name:"Standardized KPI Scale Ranges",                          cat:"Data",      q:"Q3",dur:8},
+  {id:11, name:"Data Validation from DS Team",                           cat:"Data",      q:"Q3",dur:12},
+  {id:21, name:"KPI Rankings \"Out of Total\"",                          cat:"Data",      q:"Q3",dur:4},
+  {id:14, name:"3-Year Outlook for ZIP Codes",                           cat:"Data",      q:"Q3",dur:8},
+  {id:7,  name:"Location Research Layout",                               cat:"UI/UX",     q:"Q3",dur:8},
+  {id:8,  name:"Dashboard Module Cards — Full-Card Click",               cat:"UI/UX",     q:"Q3",dur:4},
+  {id:36, name:"MF Market Summary Report Generator",                     cat:"AI",        q:"Q3",dur:1},
+  {id:28, name:"Cap Rate Risk Alert vs Treasury",                        cat:"Data",      q:"Q3",dur:4},
+  {id:29, name:"Rent Context — Asset vs ZIP/MSA Averages",               cat:"Data",      q:"Q3",dur:8},
+  {id:35, name:"ZIP Intelligence Narrator",                              cat:"AI",        q:"Q3",dur:12},
+  {id:31, name:"National-Level Filtering",                               cat:"Research",  q:"Q3",dur:8},
+  {id:32, name:"AI-Powered MSA Search Box",                              cat:"Research",  q:"Q3",dur:8},
+  {id:33, name:"Customizable \"Other\" Column",                          cat:"Research",  q:"Q3",dur:4},
+  {id:34, name:"ZIP Search Instead of Manual",                           cat:"Research",  q:"Q3",dur:8},
+  {id:38, name:"Visual Feedback for Table Rows",                         cat:"UI/UX",     q:"Q3",dur:4},
+  {id:39, name:"Fix PDF Export (Charts View)",                           cat:"Reporting", q:"Q3",dur:4},
+  {id:30, name:"Forecast-Based Sorting & Time Machine",                  cat:"Data",      q:"Q3",dur:1},
+  {id:40, name:"Fix PDF Export (List View)",                             cat:"Reporting", q:"Q3",dur:4},
+  {id:41, name:"Data Export — Clean PDF & CSV Downloads",                cat:"Reporting", q:"Q3",dur:8},
+  {id:45, name:"Portfolio Yield Analysis vs Benchmark",                  cat:"Portfolio", q:"Q4",dur:8},
+  {id:46, name:"Portfolio T12 Financial Benchmarking",                   cat:"Portfolio", q:"Q4",dur:12},
+  {id:47, name:"Comp Benchmark — Find Look-Alike Assets",                cat:"Portfolio", q:"Q4",dur:8},
+  {id:51, name:"Automated Reporting Templates",                          cat:"Reporting", q:"Q4",dur:8},
+  {id:52, name:"Saveable Analysis Blocks",                               cat:"Reporting", q:"Q4",dur:8},
+  {id:53, name:"Debt Expiration/Maturity Data",                          cat:"Data",      q:"Q4",dur:8},
+  {id:55, name:"Crime Statistics & Maps",                                cat:"Data",      q:"Q4",dur:8},
+  {id:56, name:"MSA Market Rankings System",                             cat:"Data",      q:"Q4",dur:12},
+  {id:57, name:"Rent Data 2.1/3.0 — Trends & Specialty Classes",        cat:"Data",      q:"Q4",dur:12},
+  {id:58, name:"User Tracking & Weekly Usage Summary",                   cat:"Data",      q:"Q4",dur:8},
+  {id:59, name:"Supply vs Demand Analysis",                              cat:"Research",  q:"Q4",dur:12},
+  {id:60, name:"Google Reviews Integration",                             cat:"Research",  q:"Q4",dur:8},
+  {id:37, name:"AI Formula Builder (Custom KPI Box)",                    cat:"AI",        q:"Q4",dur:12},
+  {id:61, name:"Map View Enhancements & Heatmaps",                       cat:"Research",  q:"Q4",dur:12},
+  {id:62, name:"Mobile App for On-Site Access",                          cat:"Mobile",    q:"Q1",dur:12},
+  {id:63, name:"Roles & Permissions System",                             cat:"Admin",     q:"Q1",dur:12},
+  {id:64, name:"Role-Based Permission Enforcement",                      cat:"Admin",     q:"Q1",dur:8},
+  {id:65, name:"User Invitation & Onboarding Flow",                      cat:"Admin",     q:"Q1",dur:8},
+  {id:66, name:"Users List & Management UI",                             cat:"Admin",     q:"Q1",dur:8},
+  {id:67, name:"Profile Settings & Account Menu",                        cat:"Admin",     q:"Q1",dur:4},
+  {id:68, name:"Workspace — Team Collaboration & Sharing",               cat:"Admin",     q:"Q1",dur:12},
+  {id:69, name:"Waiting-for-Decision Module",                            cat:"Portfolio", q:"Q1",dur:8},
+  {id:70, name:"Operating Asset/Property Mgmt Module",                   cat:"Portfolio", q:"Q1",dur:12},
+  {id:71, name:"Keep/Sell Recommendations Engine",                       cat:"Portfolio", q:"Q1",dur:12},
+  {id:72, name:"Ongoing Portfolio Monitoring & Alerts",                  cat:"Portfolio", q:"Q1",dur:8},
+  {id:73, name:"Pipeline Input Module",                                  cat:"Portfolio", q:"Q1",dur:8},
+  {id:74, name:"Historical + Projected Demographics (5yr)",              cat:"Research",  q:"Q1",dur:8},
+  {id:75, name:"Regional Strategy Variance Support",                     cat:"Research",  q:"Q1",dur:8},
+  {id:76, name:"Deal Analysis 2.0 & Sales Comps",                        cat:"Research",  q:"Q1",dur:12},
+  {id:77, name:"Lease Trade-Out Data",                                   cat:"Data",      q:"Q1",dur:8},
+  {id:78, name:"MSA 2.0 — Block-Level Data Alignment",                   cat:"Data",      q:"Q1",dur:12},
+  {id:79, name:"Proprietary Alpha Signals (50+ KPIs)",                   cat:"Data",      q:"Q1",dur:12},
+  {id:80, name:"Macro-Economic Integration & Mortgage Index",            cat:"Data",      q:"Q1",dur:12},
+  {id:81, name:"Entry Animation for Login",                              cat:"UI/UX",     q:"Q1",dur:4},
+];
+
+const CATS = {
+  "UI/UX":"#065A82","Data":"#0D9488","AI":"#7935DE",
+  "Research":"#EA580C","Portfolio":"#DB2777","Admin":"#64748B",
+  "Reporting":"#059669","Mobile":"#D97706","Bugs":"#DC2626"
+};
+
+const MONTHS = [
+  {label:"Apr",yr:"'26",q:"Q2",qs:true},{label:"May",yr:"'26",q:"Q2"},
+  {label:"Jun",yr:"'26",q:"Q2"},
+  {label:"Jul",yr:"'26",q:"Q3",qs:true},{label:"Aug",yr:"'26",q:"Q3"},
+  {label:"Sep",yr:"'26",q:"Q3"},
+  {label:"Oct",yr:"'26",q:"Q4",qs:true},{label:"Nov",yr:"'26",q:"Q4"},
+  {label:"Dec",yr:"'26",q:"Q4"},
+  {label:"Jan",yr:"'27",q:"Q1",qs:true},{label:"Feb",yr:"'27",q:"Q1"},
+  {label:"Mar",yr:"'27",q:"Q1"},
+];
+
+const Q_START    = {Q2:0,Q3:3,Q4:6,Q1:9};
+
+/* ── ZOOM (weeks per snap unit: 1, 2, 3, or 4) ── */
+let ZOOM_W = 4;   // weeks per snap unit
+let MW     = 168; // px per month column (= 4 weeks)
+
+// pixels per week
+function ppw(){ return MW / 4; }
+// snap size in pixels
+function snapPx(){ return ppw() * ZOOM_W; }
+
+function setMW(){
+  const avail = window.innerWidth - 188 - 240;
+  // At ZOOM_W=4 show 6 months; zoom in multiplies MW proportionally
+  MW = Math.max(60, Math.floor(avail * 4 / (6 * ZOOM_W)));
+  document.documentElement.style.setProperty('--mw', MW+'px');
+}
+
+function setZoom(w){
+  ZOOM_W = w;
+  document.getElementById('zoomVal').textContent = w+'w';
+  document.getElementById('zoomSlider').value = w;
+  setMW();
+  updateGridStyle();
+  renderGantt();
+}
+
+function updateGridStyle(){
+  let s = document.getElementById('_gs');
+  if(!s){ s=document.createElement('style'); s.id='_gs'; document.head.appendChild(s); }
+  const h = Math.round(MW/2), q = Math.round(MW/4), t = Math.round(3*MW/4);
+  if(ZOOM_W===1){
+    s.textContent=`.f-bars{background-image:repeating-linear-gradient(to right,`+
+      `transparent 0,transparent ${q-1}px,rgba(0,0,0,.04) ${q-1}px,rgba(0,0,0,.04) ${q}px,`+
+      `transparent ${q}px,transparent ${h-1}px,rgba(0,0,0,.09) ${h-1}px,rgba(0,0,0,.09) ${h}px,`+
+      `transparent ${h}px,transparent ${t-1}px,rgba(0,0,0,.04) ${t-1}px,rgba(0,0,0,.04) ${t}px,`+
+      `transparent ${t}px,transparent ${MW-1}px,#dde3ec ${MW-1}px,#dde3ec ${MW}px)!important}`;
+  } else if(ZOOM_W===2){
+    s.textContent=`.f-bars{background-image:repeating-linear-gradient(to right,`+
+      `transparent 0,transparent ${h-1}px,rgba(0,0,0,.09) ${h-1}px,rgba(0,0,0,.09) ${h}px,`+
+      `transparent ${h}px,transparent ${MW-1}px,#dde3ec ${MW-1}px,#dde3ec ${MW}px)!important}`;
+  } else {
+    s.textContent='';
+  }
+}
+
+/* ── STATUS ── */
+const SK = id => `lizo_st_${id}`;
+function getStatus(id){ return localStorage.getItem(SK(id))||'todo'; }
+function setStatus(id,s){ localStorage.setItem(SK(id),s); }
+function cycleStatus(id){
+  const c=getStatus(id), n=c==='todo'?'partial':c==='partial'?'done':'todo';
+  setStatus(id,n); return n;
+}
+const SI = {todo:'',partial:'◑',done:'✓'};
+const ST = {todo:'Not started — click to mark In Progress',partial:'In Progress — click to mark Done',done:'Done — click to reset'};
+
+/* ── POSITION + DURATION stored in WEEKS ── */
+// Keys: lizo_wi_<id> = start week index (0-47), lizo_dw_<id> = duration weeks
+const WIK = id => `lizo_wi_${id}`;
+const DWK = id => `lizo_dw_${id}`;
+
+function getWI(id, q){
+  const sw = localStorage.getItem(WIK(id));
+  if(sw!==null) return parseInt(sw);
+  // migrate old month-based key
+  const sm = localStorage.getItem(`lizo_mi_${id}`);
+  if(sm!==null) return parseInt(sm)*4;
+  return Q_START[q]*4;
+}
+function getDW(id, dur){
+  const sd = localStorage.getItem(DWK(id));
+  if(sd!==null) return parseInt(sd);
+  // migrate old month-duration key
+  const sdm = localStorage.getItem(`lizo_dm_${id}`);
+  if(sdm!==null) return parseInt(sdm)*4;
+  return dur; // f.dur is already in weeks
+}
+function setWI(id,v){ localStorage.setItem(WIK(id),v); }
+function setDW(id,v){ localStorage.setItem(DWK(id),v); }
+
+// helper: week index → label string
+function wkLabel(wi){
+  const mi = Math.min(11, Math.floor(wi/4));
+  const wm = (wi%4)+1;
+  return `${MONTHS[mi].label} ${MONTHS[mi].yr} W${wm}`;
+}
+
+const activeCats = new Set(Object.keys(CATS));
+
+/* ── NAVIGATION ── */
+let viewStart = 0;
+function navMonths(dir){
+  viewStart = Math.max(0,Math.min(6, viewStart+dir*6));
+  document.getElementById('ganttWrap').scrollTo({left:viewStart*MW,behavior:'smooth'});
+  updateNav();
+}
+function updateNav(){
+  const s=MONTHS[viewStart], e=MONTHS[Math.min(viewStart+5,11)];
+  document.getElementById('navRange').textContent=`${s.label} – ${e.label} ${e.yr}`;
+  document.getElementById('prevBtn').disabled = viewStart===0;
+  document.getElementById('nextBtn').disabled = viewStart>=6;
+}
+
+/* ── TODAY ── */
+function todayPx(){
+  const now=new Date(), a=new Date(2026,3,1), z=new Date(2027,2,31);
+  if(now<a||now>z) return null;
+  return (now-a)/((z-a)/(12*MW));
+}
+function isTodayMonth(i){
+  const now=new Date(), md=[[2026,3],[2026,4],[2026,5],[2026,6],[2026,7],[2026,8],[2026,9],[2026,10],[2026,11],[2027,0],[2027,1],[2027,2]];
+  return now.getFullYear()===md[i][0]&&now.getMonth()===md[i][1];
+}
+
+/* ── DRAG (move bar) ── */
+function initDrag(el, id){
+  el.addEventListener('mousedown', e => {
+    if(e.button!==0) return;
+    if(e.target.classList.contains('f-bar-lh')||e.target.classList.contains('f-bar-rh')) return;
+    const sx=e.clientX, sl=parseFloat(el.style.left)||0;
+    let dragging=false;
+    const tip=document.getElementById('dragTip');
+    const onMove=e=>{
+      const dx=e.clientX-sx;
+      if(!dragging&&Math.abs(dx)<3) return;
+      if(!dragging){dragging=true;el.classList.add('dragging');tip.style.display='block';}
+      const nl=Math.max(0,sl+dx);
+      el.style.left=nl+'px';
+      const sp=snapPx(), P=ppw();
+      const wi=Math.max(0,Math.min(47,Math.round(nl/sp)*ZOOM_W));
+      tip.textContent=`→ ${wkLabel(wi)}`;
+      tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-32)+'px';
+    };
+    const onUp=e=>{
+      document.removeEventListener('mousemove',onMove);
+      document.removeEventListener('mouseup',onUp);
+      tip.style.display='none';el.classList.remove('dragging');
+      if(!dragging) return;
+      const dx=e.clientX-sx, nl=Math.max(0,sl+dx);
+      const sp=snapPx(), P=ppw();
+      const wi=Math.max(0,Math.min(47,Math.round(nl/sp)*ZOOM_W));
+      el.style.left=(wi*P)+'px';
+      setWI(id,wi);
+    };
+    document.addEventListener('mousemove',onMove);
+    document.addEventListener('mouseup',onUp);
+    e.preventDefault();
+  });
+}
+
+/* ── RESIZE HANDLES ── */
+function startResize(e, id, side){
+  e.stopPropagation(); e.preventDefault();
+  const bar=document.getElementById('bar-'+id);
+  const f=FEATURES.find(x=>x.id===id);
+  const sx=e.clientX;
+  const P=ppw(), sp=snapPx();
+  const ol=parseFloat(bar.style.left)||0;
+  const ow=parseFloat(bar.style.width)||P;
+  const startWI=Math.round(ol/P);                         // current start week
+  const endWI=startWI+Math.max(ZOOM_W,Math.round((ow+3)/P)); // current end week (exclusive)
+  const tip=document.getElementById('dragTip');
+  tip.style.display='block';
+
+  const onMove=e=>{
+    const dx=e.clientX-sx;
+    if(side==='left'){
+      const newL=Math.max(0,Math.min(ol+dx,(endWI-ZOOM_W)*P));
+      const newWI=Math.max(0,Math.round(newL/sp)*ZOOM_W);
+      const newDW=Math.max(ZOOM_W, endWI-newWI);
+      bar.style.left=(newWI*P)+'px';
+      bar.style.width=(newDW*P-3)+'px';
+      tip.textContent=`Start: ${wkLabel(newWI)}`;
+    } else {
+      const newR=Math.max((startWI+ZOOM_W)*P, ol+ow+3+dx);
+      const newEndWI=Math.max(startWI+ZOOM_W, Math.round(newR/sp)*ZOOM_W);
+      const newDW=Math.max(ZOOM_W, newEndWI-startWI);
+      bar.style.width=(newDW*P-3)+'px';
+      tip.textContent=`End: ${wkLabel(Math.min(47,newEndWI-1))}`;
+    }
+    tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-32)+'px';
+  };
+
+  const onUp=()=>{
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onUp);
+    tip.style.display='none';
+    const P2=ppw(), sp2=snapPx();
+    const fl=parseFloat(bar.style.left)||0;
+    const fw=parseFloat(bar.style.width)||P2;
+    const fWI=Math.max(0,Math.min(47,Math.round(fl/sp2)*ZOOM_W));
+    const fDW=Math.max(ZOOM_W,Math.round((fw+3)/sp2)*ZOOM_W);
+    bar.style.left=(fWI*P2)+'px';
+    bar.style.width=(fDW*P2-3)+'px';
+    setWI(id,fWI); setDW(id,fDW);
+  };
+
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onUp);
+}
+
+/* ── RENDER GANTT ── */
+function renderGantt(){
+  setMW();
+  updateGridStyle();
+  const inner=document.getElementById('ganttInner');
+  let html='';
+  html+=`<div class="g-hdr-row"><div class="g-corner">Feature</div><div class="g-months">`;
+
+  // Week subdivision marks inside each month header
+  const wDivs = ZOOM_W<=2
+    ? (ZOOM_W===1
+        ? `<div class="g-wmarks">${[1,2,3,4].map((w,i)=>
+            `<div class="g-wmark" style="position:relative"><span class="g-wlabel" style="left:0">W${w}</span></div>`
+          ).join('')}</div>`
+        : `<div class="g-wmarks"><div class="g-wmark"></div><div class="g-wmark"></div></div>`)
+    : '';
+
+  MONTHS.forEach((m,i)=>{
+    html+=`<div class="g-month${m.qs?' qs':''}${isTodayMonth(i)?' today-month':''}">
+      ${m.qs?`<div class="g-q-badge">${m.q} ${m.q==='Q1'?'27':'26'}</div>`:''}
+      <div class="g-month-name">${m.label}</div><div class="g-month-yr">${m.yr}</div>
+      ${wDivs}</div>`;
+  });
+  html+=`</div></div>`;
+
+  const QUARTERS=['Q2','Q3','Q4','Q1'];
+  const QL={Q2:'Q2 2026 — Apr · May · Jun',Q3:'Q3 2026 — Jul · Aug · Sep',Q4:'Q4 2026 — Oct · Nov · Dec',Q1:'Q1 2027 — Jan · Feb · Mar'};
+
+  QUARTERS.forEach(q=>{
+    const qf=FEATURES.filter(f=>f.q===q);
+    html+=`<div class="q-hdr-row" style="top:52px">
+      <div class="q-hdr-name">${QL[q]} <span style="color:#475569;font-weight:400;margin-left:6px">(${qf.length})</span></div>
+      <div class="q-hdr-bar">${MONTHS.map(()=>`<div class="q-hdr-cell"></div>`).join('')}</div>
+    </div>`;
+    qf.forEach(f=>{
+      const st=getStatus(f.id);
+      const P=ppw();
+      const wi=getWI(f.id,f.q), dw=getDW(f.id,f.dur);
+      const bl=wi*P, bw=Math.max(P-3, dw*P-3), color=CATS[f.cat]||'#475569';
+      html+=`<div class="f-row${activeCats.has(f.cat)?'':' hidden'}" data-cat="${f.cat}" data-id="${f.id}">
+        <div class="f-name">
+          <button class="status-btn ${st}" data-id="${f.id}" title="${ST[st]}" onclick="handleStatus(${f.id},this)">${SI[st]}</button>
+          <span class="f-label" title="${f.name}">${f.name}</span>
+        </div>
+        <div class="f-bars">
+          <div class="f-bar status-${st}" id="bar-${f.id}" style="left:${bl}px;width:${bw}px;background:${color}" title="Drag to move · Handles to resize">
+            <div class="f-bar-lh" onmousedown="startResize(event,${f.id},'left')"></div>
+            ${f.name}
+            <div class="f-bar-rh" onmousedown="startResize(event,${f.id},'right')"></div>
+          </div>
+        </div>
+      </div>`;
+    });
+  });
+
+  inner.innerHTML=html;
+
+  // Today line
+  const tp=todayPx();
+  if(tp!==null){
+    document.querySelectorAll('.f-bars').forEach(el=>{
+      const l=document.createElement('div');
+      l.className='today-line';l.style.left=tp+'px';el.appendChild(l);
+    });
+  }
+
+  // Init drag
+  FEATURES.forEach(f=>{
+    const bar=document.getElementById('bar-'+f.id);
+    if(bar) initDrag(bar,f.id);
+  });
+
+  document.getElementById('ganttWrap').scrollLeft=viewStart*MW;
+  updateNav();
+}
+
+/* ── SIDEBAR ── */
+function renderSidebar(){
+  document.getElementById('cat-filters').innerHTML=Object.entries(CATS).map(([cat,color])=>
+    `<div class="cat-row ${activeCats.has(cat)?'':'off'}" onclick="toggleCat('${cat}')">
+      <div class="cat-dot" style="background:${color}"></div><span>${cat}</span></div>`).join('');
+  const qg={Q2:0,Q3:0,Q4:0,Q1:0};
+  FEATURES.forEach(f=>{if(activeCats.has(f.cat)) qg[f.q]++;});
+  document.getElementById('q-stats').innerHTML=Object.entries(qg).map(([q,c])=>
+    `<div class="q-stat"><span>${q} ${q==='Q1'?'2027':'2026'}</span><span class="q-count">${c}</span></div>`).join('');
+  const done=FEATURES.filter(f=>getStatus(f.id)==='done').length;
+  const part=FEATURES.filter(f=>getStatus(f.id)==='partial').length;
+  const todo=FEATURES.filter(f=>getStatus(f.id)==='todo').length;
+  document.getElementById('prog').innerHTML=
+    `<span style="color:#22c55e">✓ Done: ${done}</span><br>`+
+    `<span style="color:#f59e0b">◑ In progress: ${part}</span><br>`+
+    `<span style="color:#64748b">○ Not started: ${todo}</span>`;
+}
+
+function toggleCat(cat){
+  activeCats.has(cat)?activeCats.delete(cat):activeCats.add(cat);
+  renderSidebar();
+  document.querySelectorAll('.f-row').forEach(r=>r.classList.toggle('hidden',!activeCats.has(r.dataset.cat)));
+}
+
+/* ── STATUS HANDLERS ── */
+function handleStatus(id,btn){
+  const n=cycleStatus(id);
+  btn.className=`status-btn ${n}`;btn.textContent=SI[n];btn.title=ST[n];
+  const bar=document.getElementById('bar-'+id);
+  if(bar) bar.className=`f-bar status-${n}`;
+  renderSidebar();
+  if(document.getElementById('tab-weekly').classList.contains('active')) renderWeekly();
+}
+
+function handleStatusWeekly(id,btn){
+  const n=cycleStatus(id);
+  btn.textContent=n==='done'?'✅':n==='partial'?'🟡':'⬜';
+  btn.title=ST[n];
+  const gb=document.querySelector(`.status-btn[data-id="${id}"]`);
+  if(gb){gb.className=`status-btn ${n}`;gb.textContent=SI[n];}
+  const bar=document.getElementById('bar-'+id);
+  if(bar) bar.className=`f-bar status-${n}`;
+  renderSidebar();renderWeekly();
+}
+
+/* ── WEEKLY TAB ── */
+function renderWeekly(){
+  const now=new Date(),day=now.getDay(),diff=(day===0?-6:1)-day;
+  const mon=new Date(now);mon.setDate(now.getDate()+diff);
+  const sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  const fmt=d=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const fmtF=d=>d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const mo=now.getMonth(),yr=now.getFullYear();
+  let curQ='Q2';
+  if(yr===2026){if(mo>=3&&mo<=5)curQ='Q2';else if(mo>=6&&mo<=8)curQ='Q3';else if(mo>=9)curQ='Q4';}
+  else if(yr===2027&&mo<=2)curQ='Q1';
+  const NQ={Q2:'Q3',Q3:'Q4',Q4:'Q1',Q1:'Q2'};
+  const nQ=NQ[curQ];
+  const active=FEATURES.filter(f=>f.q===curQ&&getStatus(f.id)!=='done');
+  const done=FEATURES.filter(f=>getStatus(f.id)==='done');
+  const coming=FEATURES.filter(f=>f.q===nQ).slice(0,8);
+  const iH=(f,showB=true)=>{
+    const st=getStatus(f.id),color=CATS[f.cat]||'#475569';
+    const badge=showB?`<span class="w-badge b-${st}">${st==='done'?'Done':st==='partial'?'In Progress':'Not Started'}</span>`:'';
+    return `<div class="w-item">
+      <div class="w-dot" style="background:${color}"></div>
+      <div class="w-info"><div class="w-name">${f.name}${badge}</div><div class="w-meta">${f.cat} · ${f.q} ${f.q==='Q1'?'2027':'2026'}</div></div>
+      <button class="w-st-btn" title="${ST[st]}" onclick="handleStatusWeekly(${f.id},this)">${st==='done'?'✅':st==='partial'?'🟡':'⬜'}</button>
+    </div>`;
+  };
+  document.getElementById('weeklyWrap').innerHTML=`
+    <div class="w-head"><div class="w-title">Week of ${fmt(mon)} – ${fmt(sun)}</div>
+    <div class="w-sub">Today: ${fmtF(now)} · Active quarter: ${curQ} ${curQ==='Q1'?'2027':'2026'}</div></div>
+    <div class="w-grid">
+      <div class="w-col"><div class="w-col-title active">🔵 Active This Quarter (${active.length})</div>
+        ${active.length===0?'<div class="empty-msg">All done! 🎉</div>':active.map(f=>iH(f)).join('')}</div>
+      <div class="w-col"><div class="w-col-title done-c">✅ Completed (${done.length})</div>
+        ${done.length===0?'<div class="empty-msg">Nothing marked done yet.</div>':done.map(f=>iH(f,false)).join('')}</div>
+    </div>
+    <div class="w-col-full"><div class="w-col-title next-c">🔜 Coming Up — ${nQ} ${nQ==='Q1'?'2027':'2026'}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">${coming.map(f=>iH(f,false)).join('')}</div>
+    </div>`;
+}
+
+/* ── TABS ── */
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='gantt')||(i===1&&tab==='weekly')));
+  document.getElementById('tab-gantt').classList.toggle('active',tab==='gantt');
+  document.getElementById('tab-weekly').classList.toggle('active',tab==='weekly');
+  if(tab==='weekly') renderWeekly();
+}
+
+/* ── EXPORT / RESET ── */
+function exportCSV(){
+  const rows=[['ID','Name','Category','Quarter','Status','StartWeek','DurWeeks']];
+  FEATURES.forEach(f=>rows.push([f.id,`"${f.name}"`,f.cat,f.q,getStatus(f.id),getWI(f.id,f.q),getDW(f.id,f.dur)]));
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));
+  a.download='lizo_roadmap.csv';a.click();
+}
+
+function clearAll(){
+  if(!confirm('Reset all statuses and positions?')) return;
+  FEATURES.forEach(f=>{
+    localStorage.removeItem(SK(f.id));
+    localStorage.removeItem(WIK(f.id));localStorage.removeItem(DWK(f.id));
+    // also clear legacy keys
+    localStorage.removeItem(`lizo_mi_${f.id}`);localStorage.removeItem(`lizo_dm_${f.id}`);
+  });
+  renderGantt();renderSidebar();
+}
+
+/* ── RESIZE HANDLER ── */
+let _rt;
+window.addEventListener('resize',()=>{clearTimeout(_rt);_rt=setTimeout(()=>{renderGantt();renderSidebar();},150);});
+
+/* ════════════════════════════════
+   MODAL HELPERS
+════════════════════════════════ */
+function openModal(id){ document.getElementById(id).style.display='flex'; }
+function closeModal(id){ document.getElementById(id).style.display='none'; }
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') document.querySelectorAll('.mo').forEach(m=>m.style.display='none'); });
+
+/* ════════════════════════════════
+   ADD ITEM
+════════════════════════════════ */
+let _nextId = 1000; // auto-increment for custom items
+
+function addItem(){
+  const name = document.getElementById('ai-name').value.trim();
+  if(!name){ document.getElementById('ai-name').focus(); return; }
+  const cat  = document.getElementById('ai-cat').value;
+  const q    = document.getElementById('ai-q').value;
+  const dur  = parseInt(document.getElementById('ai-dur').value);
+  const id   = _nextId++;
+
+  FEATURES.push({id, name, cat, q, dur, _custom:true});
+
+  // Persist custom items
+  const customs = JSON.parse(localStorage.getItem('lizo_customs')||'[]');
+  customs.push({id,name,cat,q,dur});
+  localStorage.setItem('lizo_customs', JSON.stringify(customs));
+
+  closeModal('moAdd');
+  document.getElementById('ai-name').value = '';
+  renderGantt(); renderSidebar();
+}
+
+function loadCustomItems(){
+  const customs = JSON.parse(localStorage.getItem('lizo_customs')||'[]');
+  customs.forEach(f=>{ if(!FEATURES.find(x=>x.id===f.id)) FEATURES.push({...f,_custom:true}); });
+  if(customs.length) _nextId = Math.max(_nextId, ...customs.map(f=>f.id+1));
+}
+
+/* ════════════════════════════════
+   SAVE / LOAD VIEWS
+════════════════════════════════ */
+const VK = 'lizo_views';
+
+function getViews(){ return JSON.parse(localStorage.getItem(VK)||'{}'); }
+function putViews(v){ localStorage.setItem(VK,JSON.stringify(v)); }
+
+function saveViewNamed(){
+  const name = document.getElementById('sv-name').value.trim();
+  if(!name){ document.getElementById('sv-name').focus(); return; }
+  const v = getViews();
+  v[name] = {
+    ts: Date.now(),
+    statuses: Object.fromEntries(FEATURES.map(f=>[f.id, getStatus(f.id)])),
+    positions: Object.fromEntries(FEATURES.map(f=>[f.id, {wi:getWI(f.id,f.q), dw:getDW(f.id,f.dur)}])),
+    cats: [...activeCats],
+    scroll: document.getElementById('ganttWrap').scrollLeft,
+    customs: FEATURES.filter(f=>f._custom).map(f=>({id:f.id,name:f.name,cat:f.cat,q:f.q,dur:f.dur}))
+  };
+  putViews(v);
+  document.getElementById('sv-name').value='';
+  closeModal('moSave');
+  showToast(`View "${name}" saved`);
+}
+
+function loadView(name){
+  const v = getViews()[name];
+  if(!v) return;
+  closeModal('moViews');
+
+  // Restore custom items
+  if(v.customs){
+    v.customs.forEach(f=>{ if(!FEATURES.find(x=>x.id===f.id)) FEATURES.push({...f,_custom:true}); });
+  }
+  // Restore statuses
+  Object.entries(v.statuses||{}).forEach(([id,s])=>setStatus(parseInt(id),s));
+  // Restore positions (support both week-based and legacy month-based saves)
+  Object.entries(v.positions||{}).forEach(([id,p])=>{
+    const iid=parseInt(id);
+    if(p.wi!=null) setWI(iid,p.wi); else if(p.mi!=null) setWI(iid,p.mi*4);
+    if(p.dw!=null) setDW(iid,p.dw); else if(p.dm!=null) setDW(iid,p.dm*4);
+  });
+  // Restore cats
+  activeCats.clear();
+  (v.cats||Object.keys(CATS)).forEach(c=>activeCats.add(c));
+
+  renderGantt(); renderSidebar();
+  setTimeout(()=>{ document.getElementById('ganttWrap').scrollLeft=v.scroll||0; },50);
+  showToast(`View "${name}" loaded`);
+}
+
+function deleteView(name, e){
+  e.stopPropagation();
+  if(!confirm(`Delete view "${name}"?`)) return;
+  const v = getViews(); delete v[name]; putViews(v);
+  openViewsModal();
+}
+
+function openViewsModal(){
+  const v = getViews();
+  const keys = Object.keys(v);
+  const list = document.getElementById('views-list');
+  list.innerHTML = keys.length === 0
+    ? '<div style="text-align:center;padding:20px;color:#475569;font-size:13px">No saved views yet.</div>'
+    : keys.sort((a,b)=>(v[b].ts||0)-(v[a].ts||0)).map(name=>{
+        const d = v[name].ts ? new Date(v[name].ts).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+        return `<div class="view-item" onclick="loadView('${name.replace(/'/g,"\\'")}')">
+          <div><div class="view-item-name">${name}</div>${d?`<div style="font-size:10px;color:#475569;margin-top:2px">${d}</div>`:''}
+          </div>
+          <button class="view-item-del" onclick="deleteView('${name.replace(/'/g,"\\'")}',event)" title="Delete">✕</button>
+        </div>`;
+      }).join('');
+  openModal('moViews');
+}
+
+/* ════════════════════════════════
+   UPLOAD CSV
+════════════════════════════════ */
+let _pendingUpload = [];
+
+function handleUploadFiles(files){
+  if(!files||!files.length) return;
+  const file = files[0];
+  const reader = new FileReader();
+  reader.onload = e => parseUploadCSV(e.target.result, file.name);
+  reader.readAsText(file);
+  // reset input
+  document.getElementById('uploadInput').value='';
+}
+
+function parseUploadCSV(text, filename){
+  const lines = text.trim().split(/\r?\n/).filter(Boolean);
+  if(lines.length < 2){ showUploadError('CSV must have a header row and at least one data row.'); return; }
+
+  const header = lines[0].split(',').map(h=>h.trim().replace(/^["']|["']$/g,'').toLowerCase());
+  const nameIdx = header.indexOf('name');
+  const catIdx  = header.indexOf('cat');
+  const qIdx    = header.indexOf('q');
+  const durIdx  = header.indexOf('dur');
+
+  if(nameIdx<0){ showUploadError('Missing required column: "name"'); return; }
+
+  const rows = [];
+  for(let i=1;i<lines.length;i++){
+    const cols = lines[i].split(',').map(c=>c.trim().replace(/^["']|["']$/g,''));
+    const name = cols[nameIdx]||'';
+    if(!name) continue;
+    const cat  = catIdx>=0&&CATS[cols[catIdx]] ? cols[catIdx] : 'UI/UX';
+    const q    = qIdx>=0&&['Q2','Q3','Q4','Q1'].includes(cols[qIdx]) ? cols[qIdx] : 'Q2';
+    const dur  = durIdx>=0&&parseInt(cols[durIdx])>0 ? parseInt(cols[durIdx]) : 8;
+    rows.push({name,cat,q,dur});
+  }
+
+  if(!rows.length){ showUploadError('No valid rows found.'); return; }
+
+  _pendingUpload = rows;
+  const prev = document.getElementById('upload-preview');
+  prev.innerHTML = `<div style="color:#22c55e;margin-bottom:6px;font-weight:600">✓ Found ${rows.length} item(s) in ${filename}</div>`
+    + rows.slice(0,5).map(r=>`<div style="padding:2px 0">• ${r.name} <span style="color:#475569">(${r.cat}, ${r.q})</span></div>`).join('')
+    + (rows.length>5?`<div style="color:#475569">…and ${rows.length-5} more</div>`:'');
+  document.getElementById('upload-confirm').style.display='';
+}
+
+function showUploadError(msg){
+  document.getElementById('upload-preview').innerHTML=`<div style="color:#f87171">${msg}</div>`;
+  document.getElementById('upload-confirm').style.display='none';
+  _pendingUpload=[];
+}
+
+function confirmUpload(){
+  _pendingUpload.forEach(row=>{
+    const id = _nextId++;
+    FEATURES.push({id, ...row, _custom:true});
+    const customs = JSON.parse(localStorage.getItem('lizo_customs')||'[]');
+    customs.push({id,...row});
+    localStorage.setItem('lizo_customs',JSON.stringify(customs));
+  });
+  _pendingUpload=[];
+  document.getElementById('upload-preview').innerHTML='';
+  document.getElementById('upload-confirm').style.display='none';
+  closeModal('moUpload');
+  renderGantt(); renderSidebar();
+  showToast(`${_pendingUpload.length||'Items'} imported`);
+}
+
+/* ════════════════════════════════
+   TOAST
+════════════════════════════════ */
+function showToast(msg){
+  let t=document.getElementById('_toast');
+  if(!t){ t=document.createElement('div'); t.id='_toast';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#7c3aed;color:#fff;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:opacity .3s;pointer-events:none';
+    document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.style.opacity='0',2000);
+}
+
+/* ── FONT SIZE ── */
+function setFontSize(s){
+  document.body.dataset.fsize = s;
+  localStorage.setItem('lizo_fsize', s);
+  document.querySelectorAll('.fs-btn').forEach(b=>b.classList.toggle('active', b.dataset.sz===s));
+  renderGantt();
+}
+
+/* ── INIT ── */
+(function(){
+  const fs = localStorage.getItem('lizo_fsize')||'md';
+  document.body.dataset.fsize = fs;
+  // defer button highlight until DOM ready
+  requestAnimationFrame(()=>{
+    document.querySelectorAll('.fs-btn').forEach(b=>b.classList.toggle('active', b.dataset.sz===fs));
+  });
+})();
+setMW(); updateGridStyle(); loadCustomItems(); renderSidebar(); renderGantt();
+</script>
 </body>
 </html>
