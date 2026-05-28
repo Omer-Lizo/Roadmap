@@ -132,6 +132,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .g-wmark:first-child{border-left:none}
 .g-wlabel{font-size:8px;color:#cbd5e1;position:absolute;bottom:4px;transform:translateX(-50%)}
 
+/* ── Row drag handle ── */
+.row-handle{flex-shrink:0;width:14px;cursor:row-resize;color:#d1d5db;font-size:13px;display:flex;align-items:center;justify-content:center;user-select:none;transition:color .15s;letter-spacing:-.5px}
+.f-row:hover .row-handle{color:#94a3b8}
+.row-handle:hover{color:#475569!important}
+.f-row.row-dragging{opacity:.35;background:rgba(124,58,237,.05)!important}
+
 /* ── Delete button ── */
 .del-btn{flex-shrink:0;width:15px;height:15px;border:none;background:transparent;color:#cbd5e1;cursor:pointer;font-size:10px;line-height:1;padding:0;opacity:0;transition:opacity .15s,color .15s,background .15s;display:flex;align-items:center;justify-content:center;border-radius:3px}
 .f-row:hover .del-btn{opacity:1}
@@ -267,7 +273,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <button class="fs-btn active" data-sz="md" onclick="setFontSize('md')">M</button>
       <button class="fs-btn" data-sz="lg" onclick="setFontSize('lg')">L</button>
     </div>
-    <button class="btn btn-secondary" onclick="openModal('moAdd')" style="margin-left:2px">➕ Add Item</button>
+    <button class="btn btn-secondary" onclick="sortByDate()" style="margin-left:2px" title="Sort all rows by start date">↕ Sort by date</button>
+    <button class="btn btn-secondary" onclick="openModal('moAdd')">➕ Add Item</button>
     <button class="btn btn-secondary" onclick="openModal('moUpload')">📤 Upload</button>
     <button class="btn btn-secondary" onclick="openModal('moSave')">💾 Save View</button>
     <button class="btn btn-secondary" onclick="openViewsModal()">📂 Views</button>
@@ -609,6 +616,87 @@ function startResize(e, id, side){
   document.addEventListener('mouseup',onUp);
 }
 
+/* ── ROW ORDER ── */
+function getOrderedFeatures(){
+  const saved = localStorage.getItem('lizo_order');
+  if(saved){
+    const ids = JSON.parse(saved);
+    const ordered = ids.map(id=>FEATURES.find(f=>f.id===id)).filter(Boolean);
+    const extra = FEATURES.filter(f=>!ids.includes(f.id))
+      .sort((a,b)=>getWI(a.id,a.q)-getWI(b.id,b.q));
+    return [...ordered,...extra];
+  }
+  return [...FEATURES].sort((a,b)=>getWI(a.id,a.q)-getWI(b.id,b.q));
+}
+function saveOrder(ids){ localStorage.setItem('lizo_order',JSON.stringify(ids)); }
+function sortByDate(){
+  localStorage.removeItem('lizo_order');
+  renderGantt();
+  showToast('Sorted by start date');
+}
+
+/* ── ROW DRAG (reorder) ── */
+function initRowDragHandle(handle, id){
+  handle.addEventListener('mousedown', e=>{
+    if(e.button!==0) return;
+    e.preventDefault(); e.stopPropagation();
+    const row = handle.closest('.f-row');
+    row.classList.add('row-dragging');
+    const tip = document.getElementById('dragTip');
+    const fname = FEATURES.find(f=>f.id===id)?.name||'';
+    tip.style.display='block';
+
+    // drop indicator line
+    let line = document.getElementById('_rowLine');
+    if(!line){
+      line=document.createElement('div'); line.id='_rowLine';
+      line.style.cssText='position:fixed;height:2px;background:#7c3aed;border-radius:1px;pointer-events:none;z-index:9998;left:188px;right:0;display:none';
+      document.body.appendChild(line);
+    }
+    line.style.display='block';
+
+    let dropBeforeId=null, dropAtEnd=false;
+
+    const visRows=()=>[...document.querySelectorAll('.f-row:not(.hidden):not(.row-dragging)')];
+
+    const onMove=e=>{
+      tip.textContent=`↕ ${fname}`;
+      tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY-32)+'px';
+      const rows=visRows();
+      dropBeforeId=null; dropAtEnd=true;
+      for(let i=0;i<rows.length;i++){
+        const rect=rows[i].getBoundingClientRect();
+        if(e.clientY<rect.top+rect.height/2){
+          dropBeforeId=parseInt(rows[i].dataset.id);
+          dropAtEnd=false;
+          line.style.top=rect.top+'px'; break;
+        }
+        if(i===rows.length-1) line.style.top=rect.bottom+'px';
+      }
+    };
+
+    const onUp=()=>{
+      document.removeEventListener('mousemove',onMove);
+      document.removeEventListener('mouseup',onUp);
+      row.classList.remove('row-dragging');
+      tip.style.display='none'; line.style.display='none';
+      const order=getOrderedFeatures().map(f=>f.id);
+      const fi=order.indexOf(id);
+      if(fi===-1) return;
+      order.splice(fi,1);
+      if(dropAtEnd){ order.push(id); }
+      else if(dropBeforeId!=null){
+        const ti=order.indexOf(dropBeforeId);
+        ti===-1?order.push(id):order.splice(ti,0,id);
+      } else { order.unshift(id); }
+      saveOrder(order); renderGantt();
+    };
+
+    document.addEventListener('mousemove',onMove);
+    document.addEventListener('mouseup',onUp);
+  });
+}
+
 /* ── RENDER GANTT ── */
 function renderGantt(){
   setMW();
@@ -634,35 +722,28 @@ function renderGantt(){
   });
   html+=`</div></div>`;
 
-  const QUARTERS=['Q2','Q3','Q4','Q1'];
-  const QL={Q2:'Q2 2026 — Apr · May · Jun',Q3:'Q3 2026 — Jul · Aug · Sep',Q4:'Q4 2026 — Oct · Nov · Dec',Q1:'Q1 2027 — Jan · Feb · Mar'};
-
-  QUARTERS.forEach(q=>{
-    const qf=FEATURES.filter(f=>f.q===q);
-    html+=`<div class="q-hdr-row" style="top:52px">
-      <div class="q-hdr-name">${QL[q]} <span style="color:#475569;font-weight:400;margin-left:6px">(${qf.length})</span></div>
-      <div class="q-hdr-bar">${MONTHS.map(()=>`<div class="q-hdr-cell"></div>`).join('')}</div>
+  const QC={Q2:'#7c3aed',Q3:'#0d9488',Q4:'#d97706',Q1:'#dc2626'};
+  getOrderedFeatures().forEach(f=>{
+    const st=getStatus(f.id);
+    const P=ppw();
+    const wi=getWI(f.id,f.q), dw=getDW(f.id,f.dur);
+    const bl=wi*P, bw=Math.max(P-3, dw*P-3), color=CATS[f.cat]||'#475569';
+    html+=`<div class="f-row${activeCats.has(f.cat)?'':' hidden'}" data-cat="${f.cat}" data-id="${f.id}">
+      <div class="f-name">
+        <span class="row-handle" title="Drag to reorder">⠿</span>
+        <button class="status-btn ${st}" data-id="${f.id}" title="${ST[st]}" onclick="handleStatus(${f.id},this)">${SI[st]}</button>
+        <span class="f-label" title="${f.name}">${f.name}</span>
+        <span style="flex-shrink:0;font-size:9px;font-weight:700;color:${QC[f.q]};background:${QC[f.q]}18;padding:1px 4px;border-radius:3px;margin-right:2px">${f.q}</span>
+        <button class="del-btn" onclick="deleteItem(${f.id})" title="Remove item">✕</button>
+      </div>
+      <div class="f-bars">
+        <div class="f-bar status-${st}" id="bar-${f.id}" style="left:${bl}px;width:${bw}px;background:${color}" title="Drag to move · Handles to resize">
+          <div class="f-bar-lh" onmousedown="startResize(event,${f.id},'left')"></div>
+          ${f.name}
+          <div class="f-bar-rh" onmousedown="startResize(event,${f.id},'right')"></div>
+        </div>
+      </div>
     </div>`;
-    qf.forEach(f=>{
-      const st=getStatus(f.id);
-      const P=ppw();
-      const wi=getWI(f.id,f.q), dw=getDW(f.id,f.dur);
-      const bl=wi*P, bw=Math.max(P-3, dw*P-3), color=CATS[f.cat]||'#475569';
-      html+=`<div class="f-row${activeCats.has(f.cat)?'':' hidden'}" data-cat="${f.cat}" data-id="${f.id}">
-        <div class="f-name">
-          <button class="status-btn ${st}" data-id="${f.id}" title="${ST[st]}" onclick="handleStatus(${f.id},this)">${SI[st]}</button>
-          <span class="f-label" title="${f.name}">${f.name}</span>
-          <button class="del-btn" onclick="deleteItem(${f.id})" title="Remove item">✕</button>
-        </div>
-        <div class="f-bars">
-          <div class="f-bar status-${st}" id="bar-${f.id}" style="left:${bl}px;width:${bw}px;background:${color}" title="Drag to move · Handles to resize">
-            <div class="f-bar-lh" onmousedown="startResize(event,${f.id},'left')"></div>
-            ${f.name}
-            <div class="f-bar-rh" onmousedown="startResize(event,${f.id},'right')"></div>
-          </div>
-        </div>
-      </div>`;
-    });
   });
 
   inner.innerHTML=html;
@@ -676,10 +757,14 @@ function renderGantt(){
     });
   }
 
-  // Init drag
+  // Init bar drag + row reorder handles
   FEATURES.forEach(f=>{
     const bar=document.getElementById('bar-'+f.id);
     if(bar) initDrag(bar,f.id);
+  });
+  document.querySelectorAll('.row-handle').forEach(h=>{
+    const id=parseInt(h.closest('.f-row').dataset.id);
+    initRowDragHandle(h,id);
   });
 
   document.getElementById('ganttWrap').scrollLeft=viewStart*MW;
@@ -796,7 +881,7 @@ function clearAll(){
   });
   localStorage.removeItem('lizo_hidden');
   localStorage.removeItem('lizo_customs');
-  // rebuild FEATURES from original (reload page is simplest)
+  localStorage.removeItem('lizo_order');
   location.reload();
 }
 
